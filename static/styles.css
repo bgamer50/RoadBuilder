@@ -1,0 +1,38 @@
+p {
+	font-family:"Helvetica";
+	font-size:24pt;
+	font-weight:normal;
+	width:10%;
+}
+h1 {
+	font-family:"Helvetica";
+	font-size:20px;
+}
+
+body{
+	background-image:url('/bg');
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-position:center;
+	background-size:cover;
+}
+table.controls {
+	font-family:"Helvetica";
+	border-collapse: separate;
+	border-spacing: 2em 0.5em;
+	text-align:center;
+}
+table.roadinfo {
+	font-family:"Helvetica";
+	border-collapse: separate;
+	border-spacing: 4em 0.5em;
+	background-color: #f0e1d2;
+	text-align:center;
+	font-size:14px;
+}
+table.roadinfo tr th thead {
+	font-weight:bold;
+}
+table.roadinfo tr th tbody {
+	font-weight:normal;
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>RoadBuilder</title>
+<link rel="stylesheet" type="text/css" href="/styles">
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+
+<script type="application/javascript" src="/static/js/mouse.js"></script>
+<script type="application/javascript" src="/static/js/app.js"></script>
+<script type="application/javascript" src="/static/js/buttons.js"></script>
+<style type="text/css">
+    canvas {border: 2px solid black; }
+</style>
+</head>
+
+<body onload="draw();">
+<center><p>RoadBuilder</p>
+<canvas id="canvas" width='1175' height='575'> <p>Your browser does not support Graphics Canvas.  Please update your browser.</p>
+</canvas>
+<br>
+<table class="controls">
+<tr>
+<th><input id="createRoadButton" type="submit" value="Create Road" onclick="clickCreateRoad();"></input></th>
+<th><input id="defineZoneButton" type="submit" value="Define Zone" onclick="clickDefineZone();"></input></th>
+<th><select id="zonebox" disabled=true><option value=1>Residential</option><option value=2>Workplace</option><option value=3>Shopping</option></select></th>
+<th><input id="startSimulationButton" type="submit" value="Stop Simulation" onclick="clickStartSimulation();"></input></th>
+<th><input id="deleteButton" type="submit" value="Delete" disabled=true></input></th>
+</tr>
+</table>
+
+<table class="roadinfo">
+<tr><thead>
+<th>Road Name </th> <th>Lanes</th> <th>Toll</th> <th>Speed</th> <th>Type</th> <th>--</th>
+</tr></thead>
+<tr><tbody>
+<td><input type="text" id="namebox" value="None"/></td>
+<td><select id="lanesbox"><option value=2>2</option><option value=4>4</option><option value=6>6</option><option value=8>8</option></select></td>
+<td><select id="tollbox"><option value=0>Yes</option><option value= 1>No</option></select></td>
+<td><input type="number" id="speedbox" value="25" max=100 min=10/> MPH</td>
+<td><table class="roadinfo"><tbody>
+<tr><td>
+<select id="classbox"><option value=1>Generic</option><option value=2>Highway</option><option value=3>Highway (2-lane)</option><option value=4>Freeway</option><option value=5>Level 2 Freeway</option><option value=6>Residential</option></select>
+</td></tr>
+<tr><td>
+<select id="juncbox" disabled=false><option value=1>Stop Sign</option><option value=2>Traffic Light</option><option value=3>Roundabout</option><option value=4>Ramp</option><option value=7>Interchange</option></select>
+</td></tr>
+</tbody></table></td>
+<td><input type="submit" id="saveButton" value="Edit" onclick="clickSaveButton();"></button></td>
+</tr></tbody>
+</table>
+</center>
+</body>
+</html>
