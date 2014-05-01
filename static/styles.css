@@ -4,6 +4,13 @@ p {
 	font-weight:normal;
 	width:10%;
 }
+ft {
+	font-family:"Helvetica";
+	font-size:12pt;
+	font-weight:normal;
+	width:100%;
+	text-align:center;
+}
 h1 {
 	font-family:"Helvetica";
 	font-size:20px;
