@@ -15,10 +15,32 @@ class MainHandler(tornado.web.RequestHandler):
 	def get(self):
 		self.render("./static/index.html")
 
+class NodeHandler(tornado.websocket.WebSocketHandler):
+	def open(self, *args):
+		self.id = self.get_argument("Id")
+		elf.stream.set_nodelay(True)
+		clients[self.id] = {"id": self.id, "object": self}
+
+	def on_message(self, message):
+    	#the message can be a request of some sort; modified node array returned
+		self.write_message("node data goes here")
+
+class RoadHandler(tornado.websocket.WebSocketHandler):
+	def open(self, *args):
+		self.id = self.get_argument("Id")
+		elf.stream.set_nodelay(True)
+		clients[self.id] = {"id": self.id, "object": self}
+
+	def on_message(self, message):
+    	#the message can be a request of some sort; modified road array returned
+		self.write_message("road data goes here")
+
 class Application(tornado.web.Application):
 	def __init__(self):
 		handlers = [
 		(r"/", MainHandler),
+		(r"/n", NodeHandler),
+		(r"/r", RoadHandler),
 		(r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./"}),
 		]
 		settings = {
