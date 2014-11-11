@@ -1,4 +1,7 @@
 import sqlite3 as sql
+import pickle
+from road import Road
+from node import Node
 class Grid:
 	nodes = []
 	roads = []
@@ -8,10 +11,8 @@ class Grid:
 	def __init__(self, w, h):
 		self.WIDTH = w
 		self.HEIGHT = h
-
-		#makes nodes into a matrix
-		for k in range(0, self.WIDTH):
-			self.nodes.append([])
+		self.nodes = []
+		self.roads = []
 
 	def saveRoads(self, filename):
 		#initialize database
@@ -47,7 +48,7 @@ class Grid:
 		#begin loading
 		rows = cursor.execute("select name, lanes, toll, speed, class, rowid from roads")
 		for rw in rows:
-			r = Road(rw[0])
+			r = Road(rw[0], [[]])
 			r.numLanes = int(rw[1])
 			r.toll = int(rw[2])
 			r.speed = int(rw[3])
@@ -55,9 +56,6 @@ class Grid:
 			r.ID = int(rw[5])
 			self.roads.append(r)
 		#there should no longer be a need to keep track of a road's path
-
-	def saveNeighbors(self, n, cursor):
-		return
 
 	def saveNodes(self, filename):
 		#initialize connection
@@ -69,23 +67,51 @@ class Grid:
 			cursor.execute("select * from nodes")
 		#create table if it does not exist
 		except:
-			cursor.execute("create table nodes(x int, y int, zone int)")
+			cursor.execute("create table nodes(x int, y int, zone int, neighbors text, junctype int)")
 
 		#saves the primary field data
-		for r in self.nodes:
-			for n in r:
-				if n.ID == None:
-					cs = "', '"
-					cursor.execute("insert into nodes values('" + str(n.x) + cs + str(n.y) + cs + str(n.zone) + "')")
-					n.ID = cursor.lastrowid
-				else:
-					cursor.execute("update nodes set x='" + str(n.x) + "' where rowid='" + n.ID + "'")
-					cursor.execute("update nodes set y='" + str(n.y) + "' where rowid='" + n.ID + "'")
-					cursor.execute("update nodes set zone='" + str(n.zone) + "' where rowid='" + n.ID + "'")
-				#saves the secondary field data (the neighbor list)
-				self.saveNeighbors(n, cursor)
+		for n in self.nodes:
+			if n.ID == None:
+				cs = "', '"
+				tempArray = []
+				for nb in n.neighbors:
+					tempArray.append([nb[0], nb[1], nb[2].ID ])
+				cursor.execute("insert into nodes values('" + str(n.x) + cs + str(n.y) + cs + str(n.zone) + cs + pickle.dumps(tempArray) + cs + str(n.juncType) + "')")
+				n.ID = cursor.lastrowid
+			else:
+				cursor.execute("update nodes set x='" + str(n.x) + "' where rowid='" + n.ID + "'")
+				cursor.execute("update nodes set y='" + str(n.y) + "' where rowid='" + n.ID + "'")
+				cursor.execute("update nodes set zone='" + str(n.zone) + "' where rowid='" + n.ID + "'")
+				cursor.execute("update nodes set neighbors='" + pickle.dumps(n.neighbors) + "' where rowid='" + n.ID + "'")
+				cursor.execute("update nodes set junctype='" + str(n.juncType) + "' where rowid='" + n.ID + "'")
 		connection.commit()
+
+	def loadNodes(self, filename):
+		#initialize connection
+		connection = sql.connect(filename)
+		cursor = connection.cursor()
+
+		rows = cursor.execute("select x, y, zone, neighbors, rowid from nodes").fetchall()
+
+		for rw in rows:
+			n = Node(rw[0], rw[1])
+			n.zone = rw[2]
+			n.neighbors = self.recoverNeighbors(pickle.loads(rw[3]))
+			n.ID = rw[4]
+			self.nodes.append(n)
+
+	def recoverNeighbors(self, arr):
+		neighbors = []
+		for e in arr:
+			for r in self.roads:
+				if e[2] == r.ID:
+					neighbors.append([ e[0], e[1], r ])
+		return neighbors
 
 	def save(self, filename):
 		self.saveRoads(filename)
 		self.saveNodes(filename)
+
+	def load(self, filename):
+		self.loadRoads(filename)
+		self.loadNodes(filename)

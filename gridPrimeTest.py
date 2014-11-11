@@ -14,6 +14,11 @@ g.roads.append(r)
 n = Node(1, 0)
 n.neighbors.append( [1, 1, r] )
 n.zone = 2
-g.nodes[0].append(n)
+g.nodes.append(n)
 
-g.save("./data/roadnetwork.db")
+g.save("./data/roadNetwork.db")
+
+g2 = Grid(94, 46)
+g2.load("./data/roadNetwork.db")
+
+print(g2.nodes)
