@@ -3,9 +3,9 @@ from copy import deepcopy as copy
 
 #This is the Road class, responsible for holding all road information.  Ultimately, the most important info is its path and junctions.
 class Road:
-    path = [] #List of each place on the grid it passes through.
+    path = [] #List of each place on the grid it passes through. WILL BE REMOVED
     #the path's start and end are junctions.
-    junctions = [] #constant length of 2
+    junctions = [] #constant length of 2 WILL BE REMOVED
     numLanes = 2 #default is a 2-lane road
     classification = 1 #See below
     speed = 25

@@ -1,14 +1,91 @@
-class grid:
+import sqlite3 as sql
+class Grid:
 	nodes = []
 	roads = []
 	WIDTH = 10
 	HEIGHT = 10
 
-	def __init__(w, h, self):
+	def __init__(self, w, h):
 		self.WIDTH = w
 		self.HEIGHT = h
 
 		#makes nodes into a matrix
-		for k in range(0, WIDTH):
-			nodes.append([])
+		for k in range(0, self.WIDTH):
+			self.nodes.append([])
 
+	def saveRoads(self, filename):
+		#initialize database
+		connection = sql.connect(filename)
+		cursor = connection.cursor()
+
+		#check to see if table exists
+		try:
+			cursor.execute("select * from roads")
+		#create the table if it does not exist
+		except:
+			cursor.execute("create table roads(name text, lanes int, toll int, speed int, class int)")
+		
+		#loops over each road, if not already in the table it adds it and gives it an ID.  Otherwise it just updates it.
+		for r in self.roads:
+			if r.ID != None:
+				cursor.execute("update table roads set name='" + r.name + "' where rowid='" + str(r.ID) + "'")
+				cursor.execute("update table roads set lanes='" + str(r.lanes) + "' where rowid='" + str(r.ID) + "'")
+				cursor.execute("update table roads set toll='" + str(r.toll) + "' where rowid='" + str(r.ID) + "'")
+				cursor.execute("update table roads set speed='" + str(r.speed) + "' where rowid='" + str(r.ID) + "'")
+				cursor.execute("update table roads set class='" + str(r.classification) + "' where rowid='" + str(r.ID) + "'")
+			else:
+				cs = "', '"
+				cursor.execute("insert into roads values('" + r.name + cs + str(r.numLanes) + cs + str(r.toll) + cs + str(r.speed) + cs + str(r.classification) + "')")
+				r.ID = cursor.lastrowid
+		connection.commit()
+
+	def loadRoads(self, filename):
+		#initialize database
+		connection = sql.connect(filename)
+		cursor = connection.cursor()
+
+		#begin loading
+		rows = cursor.execute("select name, lanes, toll, speed, class, rowid from roads")
+		for rw in rows:
+			r = Road(rw[0])
+			r.numLanes = int(rw[1])
+			r.toll = int(rw[2])
+			r.speed = int(rw[3])
+			r.classification = int(rw[4])
+			r.ID = int(rw[5])
+			self.roads.append(r)
+		#there should no longer be a need to keep track of a road's path
+
+	def saveNeighbors(self, n, cursor):
+		return
+
+	def saveNodes(self, filename):
+		#initialize connection
+		connection = sql.connect(filename)
+		cursor = connection.cursor()
+
+		#check to see if table exists
+		try:
+			cursor.execute("select * from nodes")
+		#create table if it does not exist
+		except:
+			cursor.execute("create table nodes(x int, y int, zone int)")
+
+		#saves the primary field data
+		for r in self.nodes:
+			for n in r:
+				if n.ID == None:
+					cs = "', '"
+					cursor.execute("insert into nodes values('" + str(n.x) + cs + str(n.y) + cs + str(n.zone) + "')")
+					n.ID = cursor.lastrowid
+				else:
+					cursor.execute("update nodes set x='" + str(n.x) + "' where rowid='" + n.ID + "'")
+					cursor.execute("update nodes set y='" + str(n.y) + "' where rowid='" + n.ID + "'")
+					cursor.execute("update nodes set zone='" + str(n.zone) + "' where rowid='" + n.ID + "'")
+				#saves the secondary field data (the neighbor list)
+				self.saveNeighbors(n, cursor)
+		connection.commit()
+
+	def save(self, filename):
+		self.saveRoads(filename)
+		self.saveNodes(filename)
