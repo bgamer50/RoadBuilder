@@ -98,22 +98,19 @@
 	    }
 	    else
 		drawZones(ctx);
-	    //window.setTimeout(function() {$.get("/rds", showAndDrawRoads);}, 1);
-	    //while(drawn == 0) console.log("0");
 	    
 		//Updates car positions.
 	    if(new Date().getTime() - startTime > 100) {
 		pause(2);
-		$.get("/update", function() {return;});
+		//$.get("/update", function() {return;});
 		pause(2);
 		window.startTime = new Date().getTime();
 	    }
 	    if(window.simulationRunning == 1) {
-	    	$.get("/car", showAndDrawCars);
+	    	//$.get("/car", showAndDrawCars);
 	    	pause(20);
-	    }
-	    //window.drawn = 0;
-	    //window.setTimeout(function() {$.get("/car", showAndDrawCars);}, 1);
+	    });
+	
 	    drawRoadPropertiesDisplay(ctx);
 	    drawInfoBox(ctx);
 	    

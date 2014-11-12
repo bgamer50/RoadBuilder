@@ -10,7 +10,7 @@ class Node:
 		self.x = newX
 		self.y = newY
 
-	def isJunction(self):
-		if len(roads) > 1:
+	def isOccupied(self):
+		if len(self.neighbors) > 0:
 			return 1
 		return 0
