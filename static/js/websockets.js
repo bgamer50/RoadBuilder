@@ -1,5 +1,3 @@
-var roads = [];
-var nodes = [];
 function getRoads(message) {
 	if ("WebSocket" in window) {
     	var ws = new WebSocket("ws://localhost:8888/r?Id=123456789");

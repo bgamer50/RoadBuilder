@@ -27,7 +27,7 @@ class NodeHandler(tornado.websocket.WebSocketHandler):
     	#the message can be a request of some sort; modified node array returned
 		data = []
 		for n in g.nodes:
-			data.append([n.ID, n.x, n.y, n.zone, n.juncType, n.isOccupied()])
+			data.append([n.ID, n.x, n.y, n.zone, n.juncType, n.isOccupied(), n.orientation()])
 		self.write_message(json.dumps(data))
 
 class RoadHandler(tornado.websocket.WebSocketHandler):

@@ -5,6 +5,8 @@
 	var zoneMatrix = [];
 	var newZones = [];
 	var roadInfoMatrix = [];
+	var roads = [];
+	var nodes = [];
 	var prevCarMatrix = null;
 	var squareSize = 12.5;
 	var startTime = new Date().getTime();
@@ -14,6 +16,7 @@
 	var gridHeight = 575;
 	var simulationRunning = 1;
 	var roadsDrawn = 0;
+	var nodesDrawn = 0;
 	var junctionsDrawn = 0;
 	var zonesDrawn = 0;
 	var selectedRoadID = 1;
@@ -72,11 +75,16 @@
 		drawInfoBox(ctx);
 	    }
 
+	    if(window.nodesDrawn == 0) {
+	    	drawNodes(ctx);
+	    	window.nodesDrawn = 1;
+	    }
+
 	    //window.drawn = 0;
 	    if(!window.roadsDrawn) {
-	    	$.get("/rds", showAndDrawRoads);
+	    	//$.get("/rds", showAndDrawRoads);
 	    	pause(2);
-		$.get("road", getRoadInfo);
+		//$.get("road", getRoadInfo);
 		pause(2);
 		window.roadsDrawn = 1;
 	    }
@@ -84,7 +92,7 @@
 		drawRoads(ctx);
 
 	    if(!window.junctionsDrawn) {
-	    	$.get("/junc", showAndDrawJunctions);
+	    	//$.get("/junc", showAndDrawJunctions);
 	    	pause(2);
 	   	 window.junctionsDrawn = 1;
 	    }
@@ -92,7 +100,7 @@
 		drawJunctions(ctx);
 	    
 	    if(!window.zonesDrawn) {
-		$.get("/zones", showAndDrawZones);
+		//$.get("/zones", showAndDrawZones);
 		pause(2);
 		window.zonesDrawn = 1;
 	    }
@@ -109,13 +117,31 @@
 	    if(window.simulationRunning == 1) {
 	    	//$.get("/car", showAndDrawCars);
 	    	pause(20);
-	    });
-	
+	    }
+
 	    drawRoadPropertiesDisplay(ctx);
 	    drawInfoBox(ctx);
 	    
 	    window.setTimeout(draw, 300);
 
+	}
+
+	function drawNodes(ctx) {
+		
+		getRoads();
+		getNodes();
+
+		while(window.nodes.length == 0);
+
+		ctx.fillStyle = "rgb(105, 105, 105)";
+		console.log(window.nodes.length);
+		for(k = 0; k < window.nodes.length; k++) {
+			console.log("sfsdf");
+			currentNode = window.nodes[k]
+			if(currentNode[4] == 0 && currentNode[5] == 1) { //if it is a road piece (not a junction)
+				ctx.fillRect(currentNode[0], currentNode[1], squareSize, squareSize); //base
+			}
+		}
 	}
 
 	function isJunction(loc) {

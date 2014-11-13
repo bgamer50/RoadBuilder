@@ -14,6 +14,7 @@ g.roads.append(r)
 n = Node(1, 0)
 n.neighbors.append( [1, 1, r] )
 n.zone = 2
+n.orientation = 2
 g.nodes.append(n)
 
 g.save("./data/roadNetwork.db")

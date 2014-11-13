@@ -14,3 +14,15 @@ class Node:
 		if len(self.neighbors) > 0:
 			return 1
 		return 0
+
+	#returns the orientation of the node (only appliciable if it is a road.)
+	def orientation(self):
+		#basically orientation is either a single square (0) or left (1) or right (2) diagonal.
+		if len(self.neighbors) != 2:
+			return 0
+		dx = self.neighbors[0].x - self.neighbors[1].x
+		dy = self.neighbors[1].y - self.neighbors[1].y
+		if dx == dy:
+			return 2
+		else:
+			return 1
