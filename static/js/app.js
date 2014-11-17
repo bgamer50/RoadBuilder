@@ -75,10 +75,7 @@
 		drawInfoBox(ctx);
 	    }
 
-	    if(window.nodesDrawn == 0) {
-	    	drawNodes(ctx);
-	    	window.nodesDrawn = 1;
-	    }
+    	drawNodes(ctx);
 
 	    //window.drawn = 0;
 	    if(!window.roadsDrawn) {
@@ -131,15 +128,35 @@
 		getRoads();
 		getNodes();
 
-		while(window.nodes.length == 0);
+		//while(window.nodes.length == 0);
 
 		ctx.fillStyle = "rgb(105, 105, 105)";
-		console.log(window.nodes.length);
 		for(k = 0; k < window.nodes.length; k++) {
-			console.log("sfsdf");
-			currentNode = window.nodes[k]
+			currentNode = window.nodes[k];
+			x = currentNode[1];
+			y = currentNode[2];
 			if(currentNode[4] == 0 && currentNode[5] == 1) { //if it is a road piece (not a junction)
-				ctx.fillRect(currentNode[0], currentNode[1], squareSize, squareSize); //base
+				ctx.fillRect(squareSize * x, squareSize * y, squareSize, squareSize); //base
+				if(currentNode[6] == 1) { //left diagonal
+					ctx.beginPath();
+					ctx.moveTo(squareSize * (x + 1), squareSize * y);
+					ctx.lineTo(squareSize * x, squareSize * (y - 1));
+					ctx.lineTo(squareSize * (x - 1), squareSize * y);
+					ctx.lineTo(squareSize * x, squareSize * (y + 1));
+					ctx.lineTo(squareSize * (x + 1), squareSize * y);
+					ctx.closePath();
+					ctx.fill();
+				}
+				else if(currentNode[6] == 2) { //right diagonal
+					ctx.beginPath();
+					ctx.moveTo(squareSize * x, squareSize * y);
+					ctx.lineTo(squareSize * (x + 1), squareSize * (y - 1));
+					ctx.lineTo(squareSize * (x + 2), squareSize * y);
+					ctx.lineTo(squareSize * (x + 1), squareSize * (y + 1));
+					ctx.lineTo(squareSize * x, squareSize * y);
+					ctx.closePath();
+					ctx.fill();
+				}
 			}
 		}
 	}

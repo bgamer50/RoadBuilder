@@ -75,7 +75,7 @@ class Grid:
 				cs = "', '"
 				tempArray = []
 				for nb in n.neighbors:
-					tempArray.append([nb[0], nb[1], nb[2].ID ])
+					tempArray.append([nb[0], nb[1], nb[2].ID])
 				cursor.execute("insert into nodes values('" + str(n.x) + cs + str(n.y) + cs + str(n.zone) + cs + pickle.dumps(tempArray) + cs + str(n.juncType) + "')")
 				n.ID = cursor.lastrowid
 			else:
@@ -115,3 +115,4 @@ class Grid:
 	def load(self, filename):
 		self.loadRoads(filename)
 		self.loadNodes(filename)
+		print(self.nodes[0].neighbors)
