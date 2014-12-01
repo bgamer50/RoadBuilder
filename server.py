@@ -4,11 +4,13 @@ from tornado.options import define, options, parse_command_line
 import sqlite3 as sql
 import json
 from gridPrime import Grid
+from road import Road
 ##__End Imports__##
 
 ##__Begin Variable Definitions__##
 clients = dict()
 g = Grid(94, 46)
+database = "./data/roadNetwork.db"
 ##__End Variable Definitions__##
 
 ##__Begin Class Definitions__##
@@ -53,7 +55,7 @@ class NewRoadHandler(tornado.websocket.WebSocketHandler):
 		parsedMessage = json.loads(message)
 		r = Road(parsedMessage[0], [[]])
 		g.roads.append(r)
-		g.save()
+		g.save(database)
 
 		#must take parsedMessage[1], the path of the road, and turn it into nodes.
 

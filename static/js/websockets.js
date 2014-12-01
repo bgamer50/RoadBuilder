@@ -6,7 +6,7 @@ function getRoads(message) {
     	};
     	ws.onmessage = function (evt) { 
     	    var received_msg = evt.data;
-    	    console.log(received_msg);
+    	    //console.log(received_msg);
     	    window.roads = $.parseJSON(received_msg);
     	};
     	ws.onclose = function() { 
@@ -26,7 +26,7 @@ function getNodes(message) {
     	};
     	ws.onmessage = function (evt) { 
     	    var received_msg = evt.data;
-    	    console.log(received_msg);
+    	    //console.log(received_msg);
     	    window.nodes = $.parseJSON(received_msg);
     	};
     	ws.onclose = function() { 
@@ -39,7 +39,8 @@ function getNodes(message) {
 }
 
 function sendNewRoad(roadName, path) {
-	if("Websocket" in window) {
+	console.log("asdffjk;");
+	if("WebSocket" in window) {
 		var ws = new WebSocket("ws://localhost:8888/s?Id=12345678");
 		ws.onopen = function() {
 			tempArray = [roadName, path];
