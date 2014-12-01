@@ -18,11 +18,10 @@
 		    window.mouseFunction = 0;
 		    window.simulationRunning = 0;
 		    if(newRoadPath.length > 0) {
-			  $.post("/", JSON.stringify(newRoadPath));
 			  input = window.prompt("Name your road:", "Main Street");
 			  if(input.length == 0)
-				  input = "Unnamed Road";
-			  $.post("/nameroad", input);
+			  	input = "Unnamed Road";
+			  window.sendNewRoad(input, newRoadPath);
 			  window.roadsDrawn = 0; //this is because of road splitting
 		    }
 		    newRoadPath = [];

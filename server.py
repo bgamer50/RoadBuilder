@@ -43,12 +43,29 @@ class RoadHandler(tornado.websocket.WebSocketHandler):
 			data.append([r.ID, r.name, r.numLanes, r.toll, r.speed, r.classification])
 		self.write_message(json.dumps(data))
 
+class NewRoadHandler(tornado.websocket.WebSocketHandler):
+	def open(self, *args):
+		self.id = self.get_argument("Id")
+		self.stream.set_nodelay(True)
+		clients[self.id] = {"id": self.id, "object": self}
+
+	def on_message(self, message):
+		parsedMessage = json.loads(message)
+		r = Road(parsedMessage[0], [[]])
+		g.roads.append(r)
+		g.save()
+
+		#must take parsedMessage[1], the path of the road, and turn it into nodes.
+
+
+
 class Application(tornado.web.Application):
 	def __init__(self):
 		handlers = [
 		(r"/", MainHandler),
 		(r"/n", NodeHandler),
 		(r"/r", RoadHandler),
+		(r"/s", NewRoadHandler),
 		(r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static/"}),
 		]
 		settings = {

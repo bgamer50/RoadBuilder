@@ -38,5 +38,24 @@ function getNodes(message) {
 	}
 }
 
+function sendNewRoad(roadName, path) {
+	if("Websocket" in window) {
+		var ws = new WebSocket("ws://localhost:8888/s?Id=12345678");
+		ws.onopen = function() {
+			tempArray = [roadName, path];
+			ws.send(JSON.stringify(tempArray));
+		};
+		ws.onmessage = function(evt) {
+			var received_msg = evt.data;
+			console.log(received_msg);
+		};
+		ws.onclose = function() {
+			return;
+		};
+	} else {
+		console.log("Error: Websockets not supported by browser");
+		return;
+	}
+}
 
 function pause(t) { sTime = new Date().getTime(); while(new Date().getTime() - sTime < t); }

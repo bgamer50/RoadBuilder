@@ -125,8 +125,8 @@
 
 	function drawNodes(ctx) {
 		
-		getRoads();
-		getNodes();
+		getRoads("");
+		getNodes("");
 
 		//while(window.nodes.length == 0);
 

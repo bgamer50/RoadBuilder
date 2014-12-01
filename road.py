@@ -16,6 +16,7 @@ class Road:
     def __init__(self, n, points): #POINTS MUST BE IN ORDER!!!!!
         self.name = n
 	self.path = points
+	self.ID = None
 	self.junctions = []
 
 	j = NullJunction(self)
