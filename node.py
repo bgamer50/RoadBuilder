@@ -27,7 +27,7 @@ class Node:
 			return 2
 		elif self.neighbors[0][0] - 1 == self.x and self.neighbors[0][1] + 1 == self.y:
 			return 3
-		elif self.neighbors[0][0] + 1 == self.x and self.neighbors[0][0] - 1 == self.y:
+		elif self.neighbors[0][0] + 1 == self.x and self.neighbors[0][1] - 1 == self.y:
 			return 4
 		else:
 			return 0
