@@ -131,8 +131,8 @@ class Grid:
 			e = array[k]
 			if not self.containsNode(e[0], e[1]):
 				n = Node(e[0], e[1])
-				if k < len(array) - 1:
-					n.neighbors.append([array[k + 1][0], array[k + 1][1], r])
 				if k > 0:
 					n.neighbors.append([array[k - 1][0], array[k - 1][1], r])
+				if k < len(array) - 1:
+					n.neighbors.append([array[k + 1][0], array[k + 1][1], r])
 				self.nodes.append(n)
