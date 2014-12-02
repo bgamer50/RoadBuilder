@@ -20,21 +20,14 @@ class Node:
 
 	#returns the orientation of the node (only appliciable if it is a road.)
 	def orientation(self):
-		#basically orientation is either a single square (0) or left (1) or right (2) diagonal.
-		if len(self.neighbors) != 2:
-			return 0
-		dx1 = self.neighbors[0][0] - self.x
-		dy1 = self.neighbors[0][1] - self.y
-		dx2 = self.neighbors[1][0] - self.x
-		dy2 = self.neighbors[1][1] - self.y
-
-		if dx1 == dy1 and dy2 == 0:
+		#basically orientation is either a single square (0) or 1st, 2nd, 3rd, or 4th diagonal
+		if self.neighbors[0][0] + 1 == self.x and self.neighbors[0][1] + 1 == self.y:
 			return 1
-		elif dx2 == dy2 and dy1 == 0:
-			return 1
-		elif dx1 != dy1 and dy2 == 0:
+		elif self.neighbors[0][0] - 1 == self.x and self.neighbors[0][1] - 1 == self.y:
 			return 2
-		elif dx2 != dy2 and dy1 == 0:
-			return 2
+		elif self.neighbors[0][0] - 1 == self.x and self.neighbors[0][1] + 1 == self.y:
+			return 3
+		elif self.neighbors[0][0] + 1 == self.x and self.neighbors[0][0] - 1 == self.y:
+			return 4
 		else:
 			return 0

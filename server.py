@@ -55,6 +55,7 @@ class NewRoadHandler(tornado.websocket.WebSocketHandler):
 		parsedMessage = json.loads(message)
 		r = Road(parsedMessage[0], [[]])
 		g.roads.append(r)
+		g.arrayToNodes(parsedMessage[1], r)
 		g.save(database)
 
 		#must take parsedMessage[1], the path of the road, and turn it into nodes.

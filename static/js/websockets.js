@@ -39,7 +39,6 @@ function getNodes(message) {
 }
 
 function sendNewRoad(roadName, path) {
-	console.log("asdffjk;");
 	if("WebSocket" in window) {
 		var ws = new WebSocket("ws://localhost:8888/s?Id=12345678");
 		ws.onopen = function() {

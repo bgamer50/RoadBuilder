@@ -131,34 +131,80 @@
 		//while(window.nodes.length == 0);
 
 		ctx.fillStyle = "rgb(105, 105, 105)";
-		for(k = 0; k < window.nodes.length; k++) {
-			currentNode = window.nodes[k];
-			x = currentNode[1];
-			y = currentNode[2];
-			if(currentNode[4] == 0 && currentNode[5] == 1) { //if it is a road piece (not a junction)
-				ctx.fillRect(squareSize * x, squareSize * y, squareSize, squareSize); //base
-				if(currentNode[6] == 1) { //left diagonal
-					ctx.beginPath();
-					ctx.moveTo(squareSize * (x + 1), squareSize * y);
-					ctx.lineTo(squareSize * x, squareSize * (y - 1));
-					ctx.lineTo(squareSize * (x - 1), squareSize * y);
-					ctx.lineTo(squareSize * x, squareSize * (y + 1));
-					ctx.lineTo(squareSize * (x + 1), squareSize * y);
-					ctx.closePath();
-					ctx.fill();
-				}
-				else if(currentNode[6] == 2) { //right diagonal
-					ctx.beginPath();
-					ctx.moveTo(squareSize * x, squareSize * y);
-					ctx.lineTo(squareSize * (x + 1), squareSize * (y - 1));
-					ctx.lineTo(squareSize * (x + 2), squareSize * y);
-					ctx.lineTo(squareSize * (x + 1), squareSize * (y + 1));
-					ctx.lineTo(squareSize * x, squareSize * y);
-					ctx.closePath();
-					ctx.fill();
-				}
+
+		for(var k = 0; k < window.nodes.length; k++) {
+			var currentNode = window.nodes[k];
+			var x = currentNode[1];
+			var y = currentNode[2];
+			if(currentNode[6] == 1) { //x = lastEntry[1] + 1, y = lastEntry[2] + 1; lastEntry[1] = x - 1, lastEntry[2] = y - 1
+				//draw road
+				ctx.beginPath();
+				ctx.moveTo(squareSize * ((x - 1) + 1), squareSize * (y - 1));
+				ctx.lineTo(squareSize * (x + 1), squareSize * y);
+				ctx.lineTo(squareSize * ((x - 1) + 1), squareSize * y);
+				ctx.lineTo(squareSize * ((x - 1) + 1), squareSize * (y - 1));
+				ctx.closePath();
+				ctx.fill();
+
+				ctx.beginPath();
+				ctx.moveTo(squareSize * (x - 1), squareSize * ((y - 1) + 1));
+				ctx.lineTo(squareSize * x, squareSize * (y + 1));
+				ctx.lineTo(squareSize * x, squareSize * y);
+				ctx.lineTo(squareSize * (x - 1), squareSize * ((y - 1) + 1));
+				ctx.closePath();
+				ctx.fill();
+
+				//draw lines
+				
 			}
-		}
+			else if(currentNode[6] == 2) { //x = lastEntry[1] - 1, y = lastEntry[2] - 1
+				ctx.beginPath();
+				ctx.moveTo(squareSize * ((x + 1) + 1), squareSize * (y + 1));
+				ctx.lineTo(squareSize * (x + 1), squareSize * y);
+				ctx.lineTo(squareSize * (x + 1), squareSize * (y + 1));
+				ctx.closePath();
+				ctx.fill();
+
+				ctx.beginPath();
+				ctx.moveTo(squareSize * (x + 1), squareSize * ((y + 1) + 1));
+				ctx.lineTo(squareSize * x, squareSize * (y + 1));
+				ctx.lineTo(squareSize * (x + 1), squareSize * (y + 1));
+				ctx.closePath();
+				ctx.fill();
+			}
+			else if(currentNode[6] == 3) { //x = lastEntry[1] - 1, y = lastEntry[2] + 1
+				ctx.beginPath();
+				ctx.moveTo(squareSize * ((x + 1) + 1), squareSize * ((y - 1) + 1));
+				ctx.lineTo(squareSize * (x + 1), squareSize * (y + 1));
+				ctx.lineTo(squareSize * (x + 1), squareSize * ((y - 1) + 1));
+				ctx.closePath();
+				ctx.fill();
+
+				ctx.beginPath();
+				ctx.moveTo(squareSize * (x + 1), squareSize * (y - 1));
+				ctx.lineTo(squareSize * x, squareSize * y);
+				ctx.lineTo(squareSize * (x + 1), squareSize * ((y - 1) + 1));
+				ctx.closePath();
+				ctx.fill();
+			}
+			else if(currentNode[6] == 4) { //x = lastEntry[1] + 1, y = lastEntry[2] - 1
+				ctx.beginPath();
+				ctx.moveTo(squareSize * x, squareSize * y);
+				ctx.lineTo(squareSize * (x - 1), squareSize * (y + 1));
+				ctx.lineTo(squareSize * ((x - 1) + 1), squareSize * (y + 1));
+				ctx.closePath();
+				ctx.fill();
+
+				ctx.beginPath();
+				ctx.moveTo(squareSize * (x + 1), squareSize * (y + 1));
+				ctx.lineTo(squareSize * ((x - 1) + 1), squareSize * ((y + 1) + 1));
+				ctx.lineTo(squareSize * ((x - 1) + 1), squareSize * (y + 1));
+				ctx.closePath();
+				ctx.fill();
+			}
+
+	       	ctx.fillRect(squareSize * x, squareSize * y, squareSize, squareSize);
+	    }
 	}
 
 	function isJunction(loc) {

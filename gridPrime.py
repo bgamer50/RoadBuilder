@@ -119,3 +119,20 @@ class Grid:
 		self.loadRoads(filename)
 		self.loadNodes(filename)
 		print(self.nodes[0].neighbors)
+
+	def containsNode(self, x, y):
+		for n in self.nodes:
+			if n.x == x and n.y == y:
+				return 1
+		return 0
+
+	def arrayToNodes(self, array, r):
+		for k in range(0, len(array)):
+			e = array[k]
+			if not self.containsNode(e[0], e[1]):
+				n = Node(e[0], e[1])
+				if k < len(array) - 1:
+					n.neighbors.append([array[k + 1][0], array[k + 1][1], r])
+				if k > 0:
+					n.neighbors.append([array[k - 1][0], array[k - 1][1], r])
+				self.nodes.append(n)
