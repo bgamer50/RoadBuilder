@@ -70,12 +70,10 @@
                         ctx.strokeRect(x, y, squareSize, squareSize);
                     }
                 }
-        
+        drawNodes(ctx);
         drawRoadPropertiesDisplay(ctx);
 		drawInfoBox(ctx);
 	    }
-
-    	drawNodes(ctx);
 
 	    //window.drawn = 0;
 	    if(!window.roadsDrawn) {
