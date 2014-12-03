@@ -58,4 +58,24 @@ function sendNewRoad(roadName, path) {
 	}
 }
 
+function getSquareInfo(x, y) {
+	if("WebSocket" in window) {
+		var ws = new WebSocket("ws://localhost:8888/sq?Id=12345678");
+		ws.onopen = function() {
+			tempArray = [x, y];
+			ws.send(JSON.stringify(tempArray));
+		};
+		ws.onmessage = function(evt) {
+			var received_msg = evt.data;
+			window.selectedRoadID = parseInt(received_msg);
+		};
+		ws.onclose = function() {
+			return;
+		};
+	} else {
+		console.log("Error: Websockets not supported by browser");
+		return;
+	}	
+}
+
 function pause(t) { sTime = new Date().getTime(); while(new Date().getTime() - sTime < t); }
