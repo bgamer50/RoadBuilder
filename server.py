@@ -60,7 +60,17 @@ class NewRoadHandler(tornado.websocket.WebSocketHandler):
 
 		#must take parsedMessage[1], the path of the road, and turn it into nodes.
 
-
+class SquareInfoHandler(tornado.websocket.WebSocketHandler):
+	def open(self, *args):
+		self.id = self.get_argument("Id")
+		self.stream.set_nodelay(True)
+		clients[self.id] = {"id": self.id, "object": self}
+		
+	def on_message(self, message):
+		print("message received")
+		parsedMessage = json.loads(message)
+		self.write_message(str(g.getID(parsedMessage)))
+		print("message sent")
 
 class Application(tornado.web.Application):
 	def __init__(self):
@@ -69,6 +79,7 @@ class Application(tornado.web.Application):
 		(r"/n", NodeHandler),
 		(r"/r", RoadHandler),
 		(r"/s", NewRoadHandler),
+		(r"/sq", SquareInfoHandler),
 		(r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static/"}),
 		]
 		settings = {

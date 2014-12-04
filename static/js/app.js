@@ -4,7 +4,6 @@
 	var newRoadPath = [];
 	var zoneMatrix = [];
 	var newZones = [];
-	var roadInfoMatrix = [];
 	var roads = [];
 	var nodes = [];
 	var prevCarMatrix = null;
@@ -31,7 +30,7 @@
 	function pause(t) { sTime = new Date().getTime(); while(new Date().getTime() - sTime < t); } 
 	
 	function getRoadInfo(json) {
-		window.roadInfoMatrix = $.parseJSON(json);
+		window.roads = $.parseJSON(json);
 	}
 
 	function showAndDrawRoads(json) {
@@ -346,13 +345,13 @@
 	function drawInfoBox(ctx) {
 		if(selectedRoadID >= 0) {
 		  var selectedRoadIndex = -1;
-		  for(k = 0; k < roadInfoMatrix.length; k++)
-			if(parseInt(roadInfoMatrix[k][0]) == selectedRoadID) {
+		  for(k = 0; k < roads.length; k++)
+			if(parseInt(roads[k][0]) == selectedRoadID) {
 				selectedRoadIndex = k;
 				break;
 			}
 		  try {
-		  var infoBoxText = roadInfoMatrix[selectedRoadIndex][1];
+		  var infoBoxText = roads[selectedRoadIndex][1];
 		  }
 		  catch(err) {var infoBoxText = "None";}
 		}
@@ -384,17 +383,17 @@
 		}
 			
 		var index = -1;
-		for(k = 0; k < roadInfoMatrix.length; k++)
-			if(parseInt(roadInfoMatrix[k][0]) == window.selectedRoadID) {
+		for(k = 0; k < roads.length; k++)
+			if(parseInt(roads[k][0]) == window.selectedRoadID) {
 				index = k;
 				break;
 			}
 			if(index >= 0 && window.editing == 0) {
-				document.getElementById("namebox").value = String(roadInfoMatrix[index][1]);
-				document.getElementById("lanesbox").value = String(roadInfoMatrix[index][2]);
-				document.getElementById("tollbox").value = String(roadInfoMatrix[index][3]);
-				document.getElementById("speedbox").value = String(roadInfoMatrix[index][4]);
-				document.getElementById("classbox").value = String(roadInfoMatrix[index][5]);
+				document.getElementById("namebox").value = String(roads[index][1]);
+				document.getElementById("lanesbox").value = String(roads[index][2]);
+				document.getElementById("tollbox").value = String(roads[index][3]);
+				document.getElementById("speedbox").value = String(roads[index][4]);
+				document.getElementById("classbox").value = String(roads[index][5]);
 				document.getElementById("lanesbox").disabled = false;
 				document.getElementById("tollbox").disabled = false;
 				document.getElementById("speedbox").disabled = false;

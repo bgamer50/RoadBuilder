@@ -63,9 +63,11 @@ function getSquareInfo(x, y) {
 		var ws = new WebSocket("ws://localhost:8888/sq?Id=12345678");
 		ws.onopen = function() {
 			tempArray = [x, y];
+			console.log("message sent")
 			ws.send(JSON.stringify(tempArray));
 		};
 		ws.onmessage = function(evt) {
+			console.log("message received");
 			var received_msg = evt.data;
 			window.selectedRoadID = parseInt(received_msg);
 		};
