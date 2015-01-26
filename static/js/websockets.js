@@ -70,6 +70,7 @@ function getSquareInfo(x, y) {
 			console.log("message received");
 			var received_msg = evt.data;
 			window.selectedRoadID = parseInt(received_msg);
+			ws.close();
 		};
 		ws.onclose = function() {
 			return;
