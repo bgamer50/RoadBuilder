@@ -31,6 +31,7 @@ class NodeHandler(tornado.websocket.WebSocketHandler):
 		for n in g.nodes:
 			data.append([n.ID, n.x, n.y, n.zone, n.juncType, n.isOccupied(), n.orientation()])
 		self.write_message(json.dumps(data))
+		self.close()
 
 class RoadHandler(tornado.websocket.WebSocketHandler):
 	def open(self, *args):
@@ -44,6 +45,7 @@ class RoadHandler(tornado.websocket.WebSocketHandler):
 		for r in g.roads:
 			data.append([r.ID, r.name, r.numLanes, r.toll, r.speed, r.classification])
 		self.write_message(json.dumps(data))
+		self.close()
 
 class NewRoadHandler(tornado.websocket.WebSocketHandler):
 	def open(self, *args):
@@ -57,20 +59,22 @@ class NewRoadHandler(tornado.websocket.WebSocketHandler):
 		g.roads.append(r)
 		g.arrayToNodes(parsedMessage[1], r)
 		g.save(database)
+		self.close()
 
 		#must take parsedMessage[1], the path of the road, and turn it into nodes.
 
 class SquareInfoHandler(tornado.websocket.WebSocketHandler):
 	def open(self, *args):
 		self.id = self.get_argument("Id")
-		self.stream.set_nodelay(True)
+		#self.stream.set_nodelay(True)
 		clients[self.id] = {"id": self.id, "object": self}
 		
 	def on_message(self, message):
 		print("message received")
 		parsedMessage = json.loads(message)
 		self.write_message(str(g.getID(parsedMessage)))
-		print("message sent")
+		print("message sent" + str(g.getID(parsedMessage)))
+		self.close()
 
 class Application(tornado.web.Application):
 	def __init__(self):

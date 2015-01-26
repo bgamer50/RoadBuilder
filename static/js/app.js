@@ -206,7 +206,7 @@
 
 	function isJunction(loc) {
 		for(k = 0; k < juncMatrix.length; k++) {
-			if(juncMatrix[k][0] == loc[0] && juncMatrix[k][1] == loc[1])
+			if(juncMatrix[k][0] == loc[0] && window.nodes[k][4] == loc[1])
 				return 1;
 		return 0;
 		}
@@ -290,11 +290,11 @@
 	function drawJunctions(ctx) {
 		var x = 0;
 		var y = 0;
-		for(k = 0; k < juncMatrix.length; k++) {
-			x = juncMatrix[k][0][0] * squareSize;
-			y = juncMatrix[k][0][1] * squareSize;
+		for(k = 0; k < window.nodes.length; k++) {
+			x = window.nodes[k][1] * squareSize;
+			y = window.nodes[k][2] * squareSize;
 			//console.log((String)(x) + " " + (String)(y));	
-			if(juncMatrix[k][1] == 1) {	
+			if(window.nodes[k][4] == 1) {	
 				ctx.fillStyle = "rgb(255, 0, 0)";
 				ctx.beginPath();
 				ctx.arc(x + squareSize / 2.0, y + squareSize / 2.0, squareSize / 2, 0, 2 * Math.PI);
@@ -302,7 +302,7 @@
 				ctx.fill();
 				ctx.stroke();
 			}
-			else if(juncMatrix[k][1] == 2) {
+			else if(window.nodes[k][4] == 2) {
 				ctx.fillStyle = "rgb(0,255,0)";
 				ctx.beginPath();
 				ctx.arc(x + squareSize / 2.0, y + squareSize / 3.0 - 2, squareSize / 6, 0, 2 * Math.PI);
@@ -324,12 +324,12 @@
 				ctx.fill();
 				ctx.stroke();
 			}
-			else if(juncMatrix[k][1] == 3) {
+			else if(window.nodes[k][4] == 3) {
 				ctx.fillStyle = "rgb(255,255,255)";
 				ctx.fillRect(x + squareSize / 4.0, y + squareSize / 4.0, squareSize / 2.0, squareSize / 2.0);
 				ctx.strokeRect(x + squareSize / 4.0, y + squareSize / 4.0, squareSize / 2.0, squareSize / 2.0);
 			}
-			else if(juncMatrix[k][1] == 6) {
+			else if(window.nodes[k][4] == 6) {
 				ctx.fillStyle = "rgb(255, 140, 0)";
 				ctx.beginPath();
 				ctx.arc(x + squareSize / 2.0, y + squareSize / 2.0, squareSize / 3.0, 0, 2 * Math.PI);
@@ -355,7 +355,7 @@
 		  }
 		  catch(err) {var infoBoxText = "None";}
 		}
-		else if(selectedRoadID < 0) {
+		else if(selectedRoadID == -2) {
 		  var infoBoxText = "Junction";
 		}
 		else
@@ -372,7 +372,7 @@
 		  }
 	}
 	function drawRoadPropertiesDisplay(ctx) {
-		if(window.selectedRoadID < 0) {
+		if(window.selectedRoadID == -1) {
 			//then it changes into a junction properties display.
 			document.getElementById("namebox").value = "Junction";
 			document.getElementById("lanesbox").disabled = true;
@@ -381,26 +381,40 @@
 			document.getElementById("juncbox").disabled = false;
 			document.getElementById("classbox").disabled = true;
 		}
-			
-		var index = -1;
-		for(k = 0; k < roads.length; k++)
-			if(parseInt(roads[k][0]) == window.selectedRoadID) {
-				index = k;
-				break;
-			}
-			if(index >= 0 && window.editing == 0) {
-				document.getElementById("namebox").value = String(roads[index][1]);
-				document.getElementById("lanesbox").value = String(roads[index][2]);
-				document.getElementById("tollbox").value = String(roads[index][3]);
-				document.getElementById("speedbox").value = String(roads[index][4]);
-				document.getElementById("classbox").value = String(roads[index][5]);
-				document.getElementById("lanesbox").disabled = false;
-				document.getElementById("tollbox").disabled = false;
-				document.getElementById("speedbox").disabled = false;
-				document.getElementById("classbox").disabled = false;
-				document.getElementById("juncbox").disabled = true;
+		else if(window.selectedRoadID > 0) {	
+			var index = -1;
+			for(k = 0; k < roads.length; k++)
+				if(parseInt(roads[k][0]) == window.selectedRoadID) {
+					index = k;
+					break;
+				}
+				if(index >= 0 && window.editing == 0) {
+					document.getElementById("namebox").value = String(roads[index][1]);
+					document.getElementById("lanesbox").value = String(roads[index][2]);
+					document.getElementById("tollbox").value = String(roads[index][3]);
+					document.getElementById("speedbox").value = String(roads[index][4]);
+					document.getElementById("classbox").value = String(roads[index][5]);
+					document.getElementById("lanesbox").disabled = false;
+					document.getElementById("tollbox").disabled = false;
+					document.getElementById("speedbox").disabled = false;
+					document.getElementById("classbox").disabled = false;
+					document.getElementById("juncbox").disabled = true;
 
-			}
+				}
+		}
+		else {
+			window.infoBoxText = "None";
+			document.getElementById("namebox").value = String(roads[index][1]);
+			document.getElementById("lanesbox").value = String(roads[index][2]);
+			document.getElementById("tollbox").value = String(roads[index][3]);
+			document.getElementById("speedbox").value = String(roads[index][4]);
+			document.getElementById("classbox").value = String(roads[index][5]);
+			document.getElementById("lanesbox").disabled = false;
+			document.getElementById("tollbox").disabled = false;
+			document.getElementById("speedbox").disabled = false;
+			document.getElementById("classbox").disabled = false;
+			document.getElementById("juncbox").disabled = true;			
+		}
 	}
         function drawRoads(ctx) {
 	    var lastEntry = new Array();

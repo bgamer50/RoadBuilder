@@ -126,13 +126,34 @@ class Grid:
 				return 1
 		return 0
 
+	def getNode(self, x, y):
+		for n in self.nodes:
+			if n.x == x and n.y == y:
+				return n
+
 	def arrayToNodes(self, array, r):
 		for k in range(0, len(array)):
 			e = array[k]
 			if not self.containsNode(e[0], e[1]):
 				n = Node(e[0], e[1])
-				if k > 0:
-					n.neighbors.append([array[k - 1][0], array[k - 1][1], r])
-				if k < len(array) - 1:
-					n.neighbors.append([array[k + 1][0], array[k + 1][1], r])
 				self.nodes.append(n)
+			else:
+				n = self.getNode(e[0], e[1])
+			if k > 0:
+				n.neighbors.append([array[k - 1][0], array[k - 1][1], r])
+			if k < len(array) - 1:
+				n.neighbors.append([array[k + 1][0], array[k + 1][1], r])
+			if(len(n.neighbors) > 2):
+				n.juncType = 1
+
+	def getID(self, array):
+		x = int(array[0])
+		y = int(array[1])
+		for n in self.nodes:
+			if n.juncType != 0:
+				return -1
+			if len(n.neighbors) == 0:
+				return -2
+			elif n.x == x and n.y == y:
+				return n.neighbors[0][2].ID
+		return -1
