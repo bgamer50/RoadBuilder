@@ -355,7 +355,7 @@
 		  }
 		  catch(err) {var infoBoxText = "None";}
 		}
-		else if(selectedRoadID == -2) {
+		else if(selectedRoadID == -1) {
 		  var infoBoxText = "Junction";
 		}
 		else
@@ -394,26 +394,29 @@
 					document.getElementById("tollbox").value = String(roads[index][3]);
 					document.getElementById("speedbox").value = String(roads[index][4]);
 					document.getElementById("classbox").value = String(roads[index][5]);
+					document.getElementById("namebox").disabled = false;
 					document.getElementById("lanesbox").disabled = false;
 					document.getElementById("tollbox").disabled = false;
 					document.getElementById("speedbox").disabled = false;
 					document.getElementById("classbox").disabled = false;
 					document.getElementById("juncbox").disabled = true;
-
+					document.getElementById("saveButton").disabled = false;
 				}
 		}
 		else {
 			window.infoBoxText = "None";
-			document.getElementById("namebox").value = String(roads[index][1]);
-			document.getElementById("lanesbox").value = String(roads[index][2]);
-			document.getElementById("tollbox").value = String(roads[index][3]);
-			document.getElementById("speedbox").value = String(roads[index][4]);
-			document.getElementById("classbox").value = String(roads[index][5]);
-			document.getElementById("lanesbox").disabled = false;
-			document.getElementById("tollbox").disabled = false;
-			document.getElementById("speedbox").disabled = false;
-			document.getElementById("classbox").disabled = false;
-			document.getElementById("juncbox").disabled = true;			
+			document.getElementById("namebox").value = "None";
+			document.getElementById("lanesbox").value = 0;
+			document.getElementById("tollbox").value = 0;
+			document.getElementById("speedbox").value = 0;
+			document.getElementById("classbox").value = "";
+			document.getElementById("namebox").disabled = true;
+			document.getElementById("lanesbox").disabled = true;
+			document.getElementById("tollbox").disabled = true;
+			document.getElementById("speedbox").disabled = true;
+			document.getElementById("classbox").disabled = true;
+			document.getElementById("juncbox").disabled = true;
+			document.getElementById("saveButton").disabled = true;			
 		}
 	}
         function drawRoads(ctx) {
