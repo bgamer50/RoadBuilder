@@ -22,6 +22,7 @@
 			  if(input.length == 0)
 			  	input = "Unnamed Road";
 			  window.sendNewRoad(input, newRoadPath);
+			  window.pause(50);
 			  window.pointMatrix = [];
 			  window.roadsDrawn = 0; //this is because of road splitting
 		    }
