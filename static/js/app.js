@@ -375,11 +375,7 @@
 		if(window.selectedRoadID == -1) {
 			//then it changes into a junction properties display.
 			document.getElementById("namebox").value = "Junction";
-			document.getElementById("lanesbox").disabled = true;
-			document.getElementById("tollbox").disabled = true;
-			document.getElementById("speedbox").disabled = true;
-			document.getElementById("juncbox").disabled = false;
-			document.getElementById("classbox").disabled = true;
+			document.getElementById("saveButton").disabled = false; //enable the edit button
 		}
 		else if(window.selectedRoadID > 0) {	
 			var index = -1;
@@ -394,13 +390,7 @@
 					document.getElementById("tollbox").value = String(roads[index][3]);
 					document.getElementById("speedbox").value = String(roads[index][4]);
 					document.getElementById("classbox").value = String(roads[index][5]);
-					document.getElementById("namebox").disabled = false;
-					document.getElementById("lanesbox").disabled = false;
-					document.getElementById("tollbox").disabled = false;
-					document.getElementById("speedbox").disabled = false;
-					document.getElementById("classbox").disabled = false;
-					document.getElementById("juncbox").disabled = true;
-					document.getElementById("saveButton").disabled = false;
+					document.getElementById("saveButton").disabled = false; //enable the edit button
 				}
 		}
 		else {
@@ -410,13 +400,7 @@
 			document.getElementById("tollbox").value = 0;
 			document.getElementById("speedbox").value = 0;
 			document.getElementById("classbox").value = "";
-			document.getElementById("namebox").disabled = true;
-			document.getElementById("lanesbox").disabled = true;
-			document.getElementById("tollbox").disabled = true;
-			document.getElementById("speedbox").disabled = true;
-			document.getElementById("classbox").disabled = true;
-			document.getElementById("juncbox").disabled = true;
-			document.getElementById("saveButton").disabled = true;			
+			document.getElementById("saveButton").disabled = true; //disable the edit button
 		}
 	}
         function drawRoads(ctx) {

@@ -8,6 +8,7 @@ function getRoads(message) {
     	    var received_msg = evt.data;
     	    //console.log(received_msg);
     	    window.roads = $.parseJSON(received_msg);
+    	    ws.close();
     	};
     	ws.onclose = function() { 
         	return;
@@ -28,6 +29,7 @@ function getNodes(message) {
     	    var received_msg = evt.data;
     	    //console.log(received_msg);
     	    window.nodes = $.parseJSON(received_msg);
+    	    ws.close();
     	};
     	ws.onclose = function() { 
         	return;
@@ -63,11 +65,9 @@ function getSquareInfo(x, y) {
 		var ws = new WebSocket("ws://localhost:8888/sq?Id=12345678");
 		ws.onopen = function() {
 			tempArray = [x, y];
-			console.log("message sent")
 			ws.send(JSON.stringify(tempArray));
 		};
 		ws.onmessage = function(evt) {
-			console.log("message received");
 			var received_msg = evt.data;
 			window.selectedRoadID = parseInt(received_msg);
 			ws.close();
@@ -79,6 +79,25 @@ function getSquareInfo(x, y) {
 		console.log("Error: Websockets not supported by browser");
 		return;
 	}	
+}
+
+function updateRoad(id, name, lanes, toll, speed, classification) {
+	if("WebSocket" in window) {
+		var ws = new WebSocket("ws://localhost:8888/ur?Id=12345678");
+		ws.onopen = function() {
+			tempArray = [id, name, lanes, toll, speed, classification];
+			ws.send(JSON.stringify(tempArray));
+			ws.close();
+			getRoads("none");
+		};
+		ws.onclose = function() {
+			return
+		};
+	}
+	else {
+		console.log("Error:Websockets not supported by browser");
+		return;
+	}
 }
 
 function pause(t) { sTime = new Date().getTime(); while(new Date().getTime() - sTime < t); }
