@@ -61,10 +61,10 @@
 		switch(editing) {
 			case 0:
 				editing = 1;
+				document.getElementById("saveButton").value = "Save";
 				if(window.selectedRoadID < 0)
 					document.getElementById("juncbox").disabled = false;
 				else {
-					document.getElementById("saveButton").value = "Save";
 					document.getElementById("namebox").disabled = false;
 					document.getElementById("lanesbox").disabled = false;
 					document.getElementById("tollbox").disabled = false;
@@ -92,8 +92,8 @@
 				}
 				else {
 					var newType = document.getElementById("juncbox").value;
-					var data = [newType, window.selectedRoadID]
-					$.post("/changejunction", JSON.stringify(data));
+					var newZone = document.getElementById("zonebox").value;
+					updateNode(Math.floor(1.0 * window.infoBoxX / squareSize), Math.floor(1.0 * window.infoBoxY / squareSize), newZone, newType);
 				}
 				editing = 0; 
 				document.getElementById("saveButton").value = "Edit";

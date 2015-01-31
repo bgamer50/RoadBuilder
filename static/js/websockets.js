@@ -100,4 +100,23 @@ function updateRoad(id, name, lanes, toll, speed, classification) {
 	}
 }
 
+function updateNode(x, y, zone, juncType) {
+	if("WebSocket" in window) {
+		var ws = new WebSocket("ws://localhost:8888/un?Id=12345678");
+		ws.onopen = function() {
+			tempArray = [x, y, zone, juncType];
+			ws.send(JSON.stringify(tempArray));
+			ws.close();
+			getNodes("none");
+		};
+		ws.onclose = function() {
+			return
+		};
+	}
+	else {
+		console.log("Error:Websockets not supported by browser");
+		return;
+	}
+}
+
 function pause(t) { sTime = new Date().getTime(); while(new Date().getTime() - sTime < t); }

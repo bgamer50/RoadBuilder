@@ -294,7 +294,8 @@
 			x = window.nodes[k][1] * squareSize;
 			y = window.nodes[k][2] * squareSize;
 			//console.log((String)(x) + " " + (String)(y));	
-			if(window.nodes[k][4] == 1) {	
+			if(window.nodes[k][4] == 1) {
+				console.log("asdf");	
 				ctx.fillStyle = "rgb(255, 0, 0)";
 				ctx.beginPath();
 				ctx.arc(x + squareSize / 2.0, y + squareSize / 2.0, squareSize / 2, 0, 2 * Math.PI);
