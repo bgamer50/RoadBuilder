@@ -133,6 +133,20 @@
 			var currentNode = window.nodes[k];
 			var x = currentNode[1];
 			var y = currentNode[2];
+			switch(currentNode[3]) {
+				case 0:
+					ctx.fillStyle = "rgb(105, 105, 105)";
+					break;
+				case 1:
+					ctx.fillStyle = "rgb(0,255,0)";
+					break;
+				case 2:
+					ctx.fillStyle = "rgb(204,204,0)";
+					break;
+				case 3:
+					ctx.fillStyle = "rgb(0,0,255)";
+					break;
+			}
 			if(currentNode[6] == 1) { //x = lastEntry[1] + 1, y = lastEntry[2] + 1; lastEntry[1] = x - 1, lastEntry[2] = y - 1
 				//draw road
 				ctx.beginPath();
@@ -294,8 +308,7 @@
 			x = window.nodes[k][1] * squareSize;
 			y = window.nodes[k][2] * squareSize;
 			//console.log((String)(x) + " " + (String)(y));	
-			if(window.nodes[k][4] == 1) {
-				console.log("asdf");	
+			if(window.nodes[k][4] == 1) {	
 				ctx.fillStyle = "rgb(255, 0, 0)";
 				ctx.beginPath();
 				ctx.arc(x + squareSize / 2.0, y + squareSize / 2.0, squareSize / 2, 0, 2 * Math.PI);

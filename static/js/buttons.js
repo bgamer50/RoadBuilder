@@ -62,6 +62,8 @@
 			case 0:
 				editing = 1;
 				document.getElementById("saveButton").value = "Save";
+				document.getElementById("defineZoneButton").disabled = true;
+				document.getElementById("createRoadButton").disabled = true;
 				if(window.selectedRoadID < 0)
 					document.getElementById("juncbox").disabled = false;
 				else {
@@ -97,6 +99,8 @@
 				}
 				editing = 0; 
 				document.getElementById("saveButton").value = "Edit";
+				document.getElementById("defineZoneButton").disabled = false;
+				document.getElementById("createRoadButton").disabled = false;
 				document.getElementById("juncbox").disabled = true;
 				document.getElementById("namebox").disabled = true;
 				document.getElementById("lanesbox").disabled = true;
@@ -111,33 +115,17 @@
 	    window.definingZone = 1;
 	    window.simulationRunning = 2;
 	    document.getElementById("defineZoneButton").value = "Finish";
-	    document.getElementById("saveButton").disabled = true;
-	    document.getElementById("zonebox").disabled = false;
 	    document.getElementById("createRoadButton").disabled = true;
-	    document.getElementById("startSimulationButton").disabled = true;
-	    document.getElementById("deleteButton").disabled = true;
-	    document.getElementById("namebox").disabled = true;
-	    document.getElementById("lanesbox").disabled = true;
-	    document.getElementById("tollbox").disabled = true;
-	    document.getElementById("speedbox").disabled = true;
-	    document.getElementById("classbox").disabled = true;
+	    document.getElementById("zonebox").disabled = false;
 	  }
 	  else {
 	    window.definingZone = 0;
 	    window.simulationRunning = 0;
 	    document.getElementById("defineZoneButton").value = "Define Zone";
 	    document.getElementById("startSimulationButton").value = "Start Simulation";
-	    document.getElementById("zonebox").disabled = true;
-	    document.getElementById("saveButton").disabled = false;
 	    document.getElementById("createRoadButton").disabled = false;
-	    document.getElementById("startSimulationButton").disabled = false;
-	    document.getElementById("deleteButton").disabled = false;
-	    document.getElementById("namebox").disabled = false;
-	    document.getElementById("lanesbox").disabled = false;
-	    document.getElementById("tollbox").disabled = false;
-	    document.getElementById("speedbox").disabled = false;
-	    document.getElementById("classbox").disabled = false;
-	    $.post("/zones", JSON.stringify(zoneMatrix));
+	    document.getElementById("zonebox").disabled = true;
+	    //$.post("/zones", JSON.stringify(zoneMatrix));
 		
 	  }
 	    
