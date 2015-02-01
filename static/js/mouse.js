@@ -74,7 +74,6 @@
 				}
 				else if(x >= 0 && x <= gridWidth - 5 && y >= 0 && y <= gridWidth - 5 && window.definingZone == 1) {
 				    window.newZones = window.newZones.concat([[gridX, gridY, document.getElementById("zonebox").value]]);
-				    window.zoneMatrix[gridX][gridY] = document.getElementById("zonebox").value;
 				}
 				var message = 'Mouse position: ' + x + ',' + y;
 				window.mouseStartTime = new Date().getTime();

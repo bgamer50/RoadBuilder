@@ -227,23 +227,24 @@
 	}
 	function drawZones(ctx) {
 	  try {
-	    for(r = 0; r < gridWidth / squareSize; r++)
-		for(c = 0; c < gridHeight / squareSize; c++)
+	    for(k = 0; k < newZones.length; k++) {
+		 	r = newZones[k][0];
+		 	c = newZones[k][1];
 		    //residential
-		    if(zoneMatrix[r][c] == 1) {
-			ctx.fillStyle = "rgb(0,255,0)";
-			ctx.fillRect(squareSize * r, squareSize * c, squareSize, squareSize);
-		    }
+		    if(newZones[k][2] == 1)
+				ctx.fillStyle = "rgb(0,255,0)";
 		    //workplace
-		    else if(zoneMatrix[r][c] == 2) {
-			ctx.fillStyle = "rgb(204,204,0)";
-			ctx.fillRect(squareSize * r, squareSize * c, squareSize, squareSize);
-		    }
+		    else if(newZones[k][2] == 2)
+				ctx.fillStyle = "rgb(204,204,0)";
 		    //commercial/shopping
-		    else if(zoneMatrix[r][c] == 3) {
-			ctx.fillStyle = "rgb(0,0,255)";
-			ctx.fillRect(squareSize * r, squareSize * c, squareSize, squareSize);
-		    }
+		    else if(newZones[k][2] == 3)
+				ctx.fillStyle = "rgb(0,0,255)";
+			//none
+		    else
+		    	ctx.fillStyle = "rgb(255,255,255)";
+
+		    ctx.fillRect(squareSize * r, squareSize * c, squareSize, squareSize);
+		}
 	  }
 	  catch(err) {;}
 	}
