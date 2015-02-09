@@ -7,12 +7,9 @@
 				var y = evt.clientY - rect.top;
 				var gridX = Math.floor(1.0 * x / squareSize);
 				var gridY = Math.floor(1.0 * y / squareSize);
+				console.log("Grid position: " + gridX + ", " + gridY);
 				
 				if(x < gridWidth && y < gridHeight) {
-					/*$.post("/sq", JSON.stringify([gridX, gridY]));
-					pause(3);
-					$.get("/sq", function(ID) {window.selectedRoadID = parseInt(ID);});
-					pause(3);*/
 					getSquareInfo(gridX, gridY);
 					window.infoBoxTime = new Date().getTime();
 					window.infoBoxX = x; window.infoBoxY = y;

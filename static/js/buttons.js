@@ -127,9 +127,7 @@
 	    document.getElementById("zonebox").disabled = true;
 	    for(k = 0; k < newZones.length; k++)
 	    	updateNode(newZones[k][0], newZones[k][1], newZones[k][2], 0);
-	    window.newZones = [];
-	    //$.post("/zones", JSON.stringify(zoneMatrix));
-		
+	    window.newZones = [];	
 	  }
 	    
 	}

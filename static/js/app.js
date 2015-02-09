@@ -29,92 +29,44 @@
 	
 	function pause(t) { sTime = new Date().getTime(); while(new Date().getTime() - sTime < t); } 
 	
-	function getRoadInfo(json) {
-		window.roads = $.parseJSON(json);
-	}
-
-	function showAndDrawRoads(json) {
-		window.pointMatrix = $.parseJSON(json);
-		var ctx = document.getElementById("canvas").getContext("2d");
-		drawRoads(ctx);
-	}
 	function showAndDrawCars(json) {
 		window.carMatrix = $.parseJSON(json);
 		var ctx = document.getElementById("canvas").getContext("2d");
 		drawCars(ctx);
 	}
-	function showAndDrawJunctions(json) {
-		window.juncMatrix = $.parseJSON(json);
-		var ctx = document.getElementById("canvas").getContext("2d");
-		drawJunctions(ctx);
-	}
-	function showAndDrawZones(json) {
-	    window.zoneMatrix = $.parseJSON(json);
-	    var ctx = document.getElementById("canvas").getContext("2d");
-	    drawZones(ctx);
-	}
 	function draw() {
 	    
 	    var canvas = document.getElementById("canvas");
+	    setUpMouse();
 
-            if(canvas.getContext) {
-                var ctx = canvas.getContext("2d");
-		ctx.fillStyle = "rgb(255,255,255)";
-		ctx.fillRect(0, 0, 1175, 575);
-                //ctx.fillStyle = "rgb(200,0,0)";
-                //ctx.fillRect(10, 10, 55, 50);
-                ctx.fillStyle = "rgba(0,0,200,0.5)";
-                for(x = 0; x < 1175; x += squareSize) {
-                    for(y = 0; y < 575; y += squareSize) {
-                        ctx.strokeRect(x, y, squareSize, squareSize);
-                    }
-                }
+        if(canvas.getContext) {
+	        var ctx = canvas.getContext("2d");
+			
+			ctx.fillStyle = "rgb(255,255,255)";
+			ctx.fillRect(0, 0, 1175, 575);
+
+	        ctx.fillStyle = "rgba(0,0,200,0.5)";
+	        
+	        for(x = 0; x < 1175; x += squareSize)
+	            for(y = 0; y < 575; y += squareSize)
+	                ctx.strokeRect(x, y, squareSize, squareSize);
+
         drawNodes(ctx);
+        drawZones(ctx);
+        drawCars(ctx);
         drawRoadPropertiesDisplay(ctx);
 		drawInfoBox(ctx);
 	    }
-
-	    //window.drawn = 0;
-	    if(!window.roadsDrawn) {
-	    	//$.get("/rds", showAndDrawRoads);
-	    	pause(2);
-		//$.get("road", getRoadInfo);
-		pause(2);
-		window.roadsDrawn = 1;
-	    }
-	    else
-		drawRoads(ctx);
-
-	    if(!window.junctionsDrawn) {
-	    	//$.get("/junc", showAndDrawJunctions);
-	    	pause(2);
-	   	 window.junctionsDrawn = 1;
-	    }
-	    else
-		drawJunctions(ctx);
-	    
-	    if(!window.zonesDrawn) {
-		//$.get("/zones", showAndDrawZones);
-		pause(2);
-		window.zonesDrawn = 1;
-	    }
-	    else
-		drawZones(ctx);
-	    
-		//Updates car positions.
+	    /*
 	    if(new Date().getTime() - startTime > 100) {
-		pause(2);
-		//$.get("/update", function() {return;});
-		pause(2);
-		window.startTime = new Date().getTime();
-	    }
-	    if(window.simulationRunning == 1) {
-	    	//$.get("/car", showAndDrawCars);
-	    	pause(20);
+			window.startTime = new Date().getTime();
+			if(window.simulationRunning == 1)
+				drawCars(ctx, 1);
 	    }
 
-	    drawRoadPropertiesDisplay(ctx);
-	    drawInfoBox(ctx);
+	    else if(window.simulationRunning == 1) {
+	    	drawCars(ctx, 0);
+	    }*/
 	    
 	    window.setTimeout(draw, 300);
 
@@ -248,7 +200,8 @@
 	  }
 	  catch(err) {;}
 	}
-	function drawCars(ctx) {
+	function drawCars(ctx, update) {
+		getCars(update);
 		ctx.fillStyle = "rgb(0,200,0)";
 		length = 4;
 		dxPrime = 0;
@@ -259,43 +212,41 @@
 		    dx = carMatrix[k][1][0] - carMatrix[k][0][0];
 		    dy = carMatrix[k][1][1] - carMatrix[k][0][1];
 		    if(dx == 0 && dy == 0 && prevCarMatrix != null && k < prevCarMatrix.length) {
-			dxPrime = dx;
-			dyPrime = dy;
-			//console.log(prevCarMatrix[k].length)
+				dxPrime = dx;
+				dyPrime = dy;
+				//console.log(prevCarMatrix[k].length)
 		    	dx = prevCarMatrix[k][1][0] - prevCarMatrix[k][0][0];
-			dy = prevCarMatrix[k][1][1] - prevCarMatrix[k][0][1];
+				dy = prevCarMatrix[k][1][1] - prevCarMatrix[k][0][1];
 		    }
 
 		    //if(!isJunction(carMatrix[k][0])) {
 		    if(0 == 0) {
 		    	if(dx == 1 && dy == 1)
-				ctx.fillRect(squareSize * carMatrix[k][0][0], squareSize * (carMatrix[k][0][1] + 1), length, length);
+					ctx.fillRect(squareSize * carMatrix[k][0][0], squareSize * (carMatrix[k][0][1] + 1), length, length);
 		        else if(dx == 1 && dy == -1)
-				ctx.fillRect(squareSize * (carMatrix[k][0][0] + 1), squareSize * carMatrix[k][0][1], length, length);
-			else if(dx == 1 && dy == 0)
-				ctx.fillRect(squareSize * (carMatrix[k][0][0] + 0.5), squareSize * (carMatrix[k][0][1] + 1) - length, length, length);
-			else if(dx == 0 && dy == 1)
-				ctx.fillRect(squareSize * carMatrix[k][0][0], squareSize * (carMatrix[k][0][1] + 0.5), length, length);
-			else if(dx == 0 && dy == -1)
-				ctx.fillRect(squareSize * (carMatrix[k][0][0] + 1) - length, squareSize * (carMatrix[k][0][1] + 0.5), length, length);
-			else if(dx == -1 && dy == 1)
-				ctx.fillRect(squareSize * (carMatrix[k][0][0] - 0.5), squareSize * (carMatrix[k][0][1] + 0.5), length, length);
-			else if(dx == -1 && dy == -1)
-				ctx.fillRect(squareSize * (carMatrix[k][0][0] + 1) - length, squareSize * carMatrix[k][0][1], length, length);
-			else if(dx == -1 && dy == 0)
-				ctx.fillRect(squareSize * (carMatrix[k][0][0] + 0.5), squareSize * carMatrix[k][0][1], length, length);
+					ctx.fillRect(squareSize * (carMatrix[k][0][0] + 1), squareSize * carMatrix[k][0][1], length, length);
+				else if(dx == 1 && dy == 0)
+					ctx.fillRect(squareSize * (carMatrix[k][0][0] + 0.5), squareSize * (carMatrix[k][0][1] + 1) - length, length, length);
+				else if(dx == 0 && dy == 1)
+					ctx.fillRect(squareSize * carMatrix[k][0][0], squareSize * (carMatrix[k][0][1] + 0.5), length, length);
+				else if(dx == 0 && dy == -1)
+					ctx.fillRect(squareSize * (carMatrix[k][0][0] + 1) - length, squareSize * (carMatrix[k][0][1] + 0.5), length, length);
+				else if(dx == -1 && dy == 1)
+					ctx.fillRect(squareSize * (carMatrix[k][0][0] - 0.5), squareSize * (carMatrix[k][0][1] + 0.5), length, length);
+				else if(dx == -1 && dy == -1)
+					ctx.fillRect(squareSize * (carMatrix[k][0][0] + 1) - length, squareSize * carMatrix[k][0][1], length, length);
+				else if(dx == -1 && dy == 0)
+					ctx.fillRect(squareSize * (carMatrix[k][0][0] + 0.5), squareSize * carMatrix[k][0][1], length, length);
 		    }
 
 		    if(dxPrime == 0 && dyPrime == 0 && prevCarMatrix != null && k < prevCarMatrix.length) {
 		      try {
 		    	carMatrix[k][1][0] = prevCarMatrix[k][1][0];
-			carMatrix[k][1][1] = prevCarMatrix[k][1][1];
-			carMatrix[k][0][0] = prevCarMatrix[k][0][0];
-			carMatrix[k][0][1] = prevCarMatrix[k][0][1];
+				carMatrix[k][1][1] = prevCarMatrix[k][1][1];
+				carMatrix[k][0][0] = prevCarMatrix[k][0][0];
+				carMatrix[k][0][1] = prevCarMatrix[k][0][1];
 		      }
-		      catch(err) {
-			; //do nothing
-		      }
+		      catch(err) {; /*do nothing*/}
 		    }
 		}
 		window.prevCarMatrix = [];
@@ -420,89 +371,87 @@
 	}
         function drawRoads(ctx) {
 	    var lastEntry = new Array();
-            for(k = 0; k < pointMatrix.length; k++) {
-		var x = pointMatrix[k][2] * squareSize;
-                var y = pointMatrix[k][3] * squareSize;
-             	
-		if(pointMatrix[k][0] != -1)
-		  ctx.fillStyle = "rgb(105, 105, 105)";
-		else
-		  ctx.fillStyle = "rgb(130, 105, 105)";
-		if(lastEntry[1] + 1 == pointMatrix[k][2] && lastEntry[2] + 1 == pointMatrix[k][3]) { //x + 1, y + 1
-			//draw road
-			ctx.beginPath();
-			ctx.moveTo(squareSize * (lastEntry[1] + 1), squareSize * lastEntry[2])
-			ctx.lineTo(squareSize * (pointMatrix[k][2] + 1), squareSize * pointMatrix[k][3])
-			ctx.lineTo(squareSize * (lastEntry[1] + 1), squareSize * pointMatrix[k][3])
-			ctx.lineTo(squareSize * (lastEntry[1] + 1), squareSize * lastEntry[2])
-			ctx.closePath();
-			ctx.fill();
+        for(k = 0; k < pointMatrix.length; k++) {
+			var x = pointMatrix[k][2] * squareSize;
+	        var y = pointMatrix[k][3] * squareSize;
+	             	
+			if(pointMatrix[k][0] != -1)
+			  ctx.fillStyle = "rgb(105, 105, 105)";
+			else
+			  ctx.fillStyle = "rgb(130, 105, 105)";
+			if(lastEntry[1] + 1 == pointMatrix[k][2] && lastEntry[2] + 1 == pointMatrix[k][3]) { //x + 1, y + 1
+				//draw road
+				ctx.beginPath();
+				ctx.moveTo(squareSize * (lastEntry[1] + 1), squareSize * lastEntry[2])
+				ctx.lineTo(squareSize * (pointMatrix[k][2] + 1), squareSize * pointMatrix[k][3])
+				ctx.lineTo(squareSize * (lastEntry[1] + 1), squareSize * pointMatrix[k][3])
+				ctx.lineTo(squareSize * (lastEntry[1] + 1), squareSize * lastEntry[2])
+				ctx.closePath();
+				ctx.fill();
 
-			ctx.beginPath();
-			ctx.moveTo(squareSize * lastEntry[1], squareSize * (lastEntry[2] + 1));
-			ctx.lineTo(squareSize * pointMatrix[k][2], squareSize * (pointMatrix[k][3] + 1));
-			ctx.lineTo(squareSize * pointMatrix[k][2], squareSize * pointMatrix[k][3]);
-			ctx.lineTo(squareSize * lastEntry[1], squareSize * (lastEntry[2] + 1));
-			ctx.closePath();
-			ctx.fill();
+				ctx.beginPath();
+				ctx.moveTo(squareSize * lastEntry[1], squareSize * (lastEntry[2] + 1));
+				ctx.lineTo(squareSize * pointMatrix[k][2], squareSize * (pointMatrix[k][3] + 1));
+				ctx.lineTo(squareSize * pointMatrix[k][2], squareSize * pointMatrix[k][3]);
+				ctx.lineTo(squareSize * lastEntry[1], squareSize * (lastEntry[2] + 1));
+				ctx.closePath();
+				ctx.fill();
 
-			//draw lines
+				//draw lines
+				
+			}
+			else if(lastEntry[1] - 1 == pointMatrix[k][2] && lastEntry[2] - 1 == pointMatrix[k][3]) { //x - 1, y - 1
+				ctx.beginPath();
+				ctx.moveTo(squareSize * (lastEntry[1] + 1), squareSize * lastEntry[2]);
+				ctx.lineTo(squareSize * (pointMatrix[k][2] + 1), squareSize * pointMatrix[k][3]);
+				ctx.lineTo(squareSize * (pointMatrix[k][2] + 1), squareSize * (pointMatrix[k][3] + 1));
+				ctx.closePath();
+				ctx.fill();
+
+				ctx.beginPath();
+				ctx.moveTo(squareSize * lastEntry[1], squareSize * (lastEntry[2] + 1));
+				ctx.lineTo(squareSize * pointMatrix[k][2], squareSize * (pointMatrix[k][3] + 1));
+				ctx.lineTo(squareSize * lastEntry[1], squareSize * lastEntry[2]);
+				ctx.closePath();
+				ctx.fill();
+			}
+			else if(lastEntry[1] - 1 == pointMatrix[k][2] && lastEntry[2] + 1 == pointMatrix[k][3]) { //x - 1, y + 1
+				ctx.beginPath();
+				ctx.moveTo(squareSize * (lastEntry[1] + 1), squareSize * (lastEntry[2] + 1));
+				ctx.lineTo(squareSize * (pointMatrix[k][2] + 1), squareSize * (pointMatrix[k][3] + 1));
+				ctx.lineTo(squareSize * lastEntry[1], squareSize * (lastEntry[2] + 1));
+				ctx.closePath();
+				ctx.fill();
+
+				ctx.beginPath();
+				ctx.moveTo(squareSize * lastEntry[1], squareSize * lastEntry[2]);
+				ctx.lineTo(squareSize * pointMatrix[k][2], squareSize * pointMatrix[k][3]);
+				ctx.lineTo(squareSize * lastEntry[1], squareSize * (lastEntry[2] + 1));
+				ctx.closePath();
+				ctx.fill();
+			}
+			else if(lastEntry[1] + 1 == pointMatrix[k][2] && lastEntry[2] - 1 == pointMatrix[k][3]) { //x + 1, y - 1
+				ctx.beginPath();
+				ctx.moveTo(squareSize * pointMatrix[k][2], squareSize * pointMatrix[k][3]);
+				ctx.lineTo(squareSize * lastEntry[1], squareSize * lastEntry[2]);
+				ctx.lineTo(squareSize * (lastEntry[1] + 1), squareSize * lastEntry[2]);
+				ctx.closePath();
+				ctx.fill();
+
+				ctx.beginPath();
+				ctx.moveTo(squareSize * (pointMatrix[k][2] + 1), squareSize * (pointMatrix[k][3] + 1));
+				ctx.lineTo(squareSize * (lastEntry[1] + 1), squareSize * (lastEntry[2] + 1));
+				ctx.lineTo(squareSize * (lastEntry[1] + 1), squareSize * lastEntry[2]);
+				ctx.closePath();
+				ctx.fill();
+			}
+
+	        ctx.fillRect(x, y, squareSize, squareSize);
 			
-		}
-		else if(lastEntry[1] - 1 == pointMatrix[k][2] && lastEntry[2] - 1 == pointMatrix[k][3]) { //x - 1, y - 1
-			ctx.beginPath();
-			ctx.moveTo(squareSize * (lastEntry[1] + 1), squareSize * lastEntry[2]);
-			ctx.lineTo(squareSize * (pointMatrix[k][2] + 1), squareSize * pointMatrix[k][3]);
-			ctx.lineTo(squareSize * (pointMatrix[k][2] + 1), squareSize * (pointMatrix[k][3] + 1));
-			ctx.closePath();
-			ctx.fill();
-
-			ctx.beginPath();
-			ctx.moveTo(squareSize * lastEntry[1], squareSize * (lastEntry[2] + 1));
-			ctx.lineTo(squareSize * pointMatrix[k][2], squareSize * (pointMatrix[k][3] + 1));
-			ctx.lineTo(squareSize * lastEntry[1], squareSize * lastEntry[2]);
-			ctx.closePath();
-			ctx.fill();
-		}
-		else if(lastEntry[1] - 1 == pointMatrix[k][2] && lastEntry[2] + 1 == pointMatrix[k][3]) { //x - 1, y + 1
-			ctx.beginPath();
-			ctx.moveTo(squareSize * (lastEntry[1] + 1), squareSize * (lastEntry[2] + 1));
-			ctx.lineTo(squareSize * (pointMatrix[k][2] + 1), squareSize * (pointMatrix[k][3] + 1));
-			ctx.lineTo(squareSize * lastEntry[1], squareSize * (lastEntry[2] + 1));
-			ctx.closePath();
-			ctx.fill();
-
-			ctx.beginPath();
-			ctx.moveTo(squareSize * lastEntry[1], squareSize * lastEntry[2]);
-			ctx.lineTo(squareSize * pointMatrix[k][2], squareSize * pointMatrix[k][3]);
-			ctx.lineTo(squareSize * lastEntry[1], squareSize * (lastEntry[2] + 1));
-			ctx.closePath();
-			ctx.fill();
-		}
-		else if(lastEntry[1] + 1 == pointMatrix[k][2] && lastEntry[2] - 1 == pointMatrix[k][3]) { //x + 1, y - 1
-			ctx.beginPath();
-			ctx.moveTo(squareSize * pointMatrix[k][2], squareSize * pointMatrix[k][3]);
-			ctx.lineTo(squareSize * lastEntry[1], squareSize * lastEntry[2]);
-			ctx.lineTo(squareSize * (lastEntry[1] + 1), squareSize * lastEntry[2]);
-			ctx.closePath();
-			ctx.fill();
-
-			ctx.beginPath();
-			ctx.moveTo(squareSize * (pointMatrix[k][2] + 1), squareSize * (pointMatrix[k][3] + 1));
-			ctx.lineTo(squareSize * (lastEntry[1] + 1), squareSize * (lastEntry[2] + 1));
-			ctx.lineTo(squareSize * (lastEntry[1] + 1), squareSize * lastEntry[2]);
-			ctx.closePath();
-			ctx.fill();
-		}
-
-                	ctx.fillRect(x, y, squareSize, squareSize);
-		
-		lastEntry[0] = pointMatrix[k][0];
-		lastEntry[1] = pointMatrix[k][2];
-		lastEntry[2] = pointMatrix[k][3];
-            }
-
-        setUpMouse(); //for some reason this has to be here...	(Found in mouse.js)
+			lastEntry[0] = pointMatrix[k][0];
+			lastEntry[1] = pointMatrix[k][2];
+			lastEntry[2] = pointMatrix[k][3];
+        }
 	}
 	function borderCount(testX, testY) {
 	  	var bordering = 0;
