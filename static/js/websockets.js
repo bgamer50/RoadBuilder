@@ -127,7 +127,7 @@ function getCars(update) {
 		};
 		ws.onmessage = function(evt) {
 			var received_msg = evt.data;
-			window.roadMatrix = $.parseJSON(received_msg);
+			window.carMatrix = $.parseJSON(received_msg);
 			ws.close();
 		};
 		ws.onclose = function() {

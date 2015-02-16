@@ -6,7 +6,7 @@
 	var newZones = [];
 	var roads = [];
 	var nodes = [];
-	var prevCarMatrix = null;
+	var prevCarMatrix = [];
 	var squareSize = 12.5;
 	var startTime = new Date().getTime();
 	var mouseStartTime = startTime;
@@ -29,11 +29,6 @@
 	
 	function pause(t) { sTime = new Date().getTime(); while(new Date().getTime() - sTime < t); } 
 	
-	function showAndDrawCars(json) {
-		window.carMatrix = $.parseJSON(json);
-		var ctx = document.getElementById("canvas").getContext("2d");
-		drawCars(ctx);
-	}
 	function draw() {
 	    
 	    var canvas = document.getElementById("canvas");
@@ -53,11 +48,10 @@
 
         drawNodes(ctx);
         drawZones(ctx);
-        drawCars(ctx);
         drawRoadPropertiesDisplay(ctx);
 		drawInfoBox(ctx);
 	    }
-	    /*
+	    
 	    if(new Date().getTime() - startTime > 100) {
 			window.startTime = new Date().getTime();
 			if(window.simulationRunning == 1)
@@ -66,7 +60,7 @@
 
 	    else if(window.simulationRunning == 1) {
 	    	drawCars(ctx, 0);
-	    }*/
+	    }
 	    
 	    window.setTimeout(draw, 300);
 

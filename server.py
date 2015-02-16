@@ -5,6 +5,8 @@ import sqlite3 as sql
 import json
 from gridPrime import Grid
 from road import Road
+from carPrime import Car
+from simulation import step
 ##__End Imports__##
 
 ##__Begin Variable Definitions__##
@@ -70,10 +72,46 @@ class SquareInfoHandler(tornado.websocket.WebSocketHandler):
 		clients[self.id] = {"id": self.id, "object": self}
 		
 	def on_message(self, message):
-		print("message received")
 		parsedMessage = json.loads(message)
 		self.write_message(str(g.getID(parsedMessage)))
-		print("message sent" + str(g.getID(parsedMessage)))
+		self.close()
+
+class RoadUpdateHandler(tornado.websocket.WebSocketHandler):
+	def open(self, *args):
+		self.id = self.get_argument("Id")
+		clients[self.id] = {"id": self.id, "object": self}
+
+	def on_message(self, message):
+		print("updateroad " + str(message))
+		parsedMessage = json.loads(message)
+		g.updateRoad(parsedMessage)
+		g.save(database)
+		self.close()
+
+class NodeUpdateHandler(tornado.websocket.WebSocketHandler):
+	def open(self, *args):
+		self.id = self.get_argument("Id")
+		clients[self.id] = {"id": self.id, "object": self}
+
+	def on_message(self, message):
+		parsedMessage = json.loads(message)
+		g.updateNode(parsedMessage, database)
+		g.save(database)
+		self.close()
+
+class CarHandler(tornado.websocket.WebSocketHandler):
+	def open(self, *args):
+		self.id = self.get_argument("Id")
+		clients[self.id] = {"id": self.id, "object": self}
+
+	def on_message(self, message):
+		parsedMessage = int(message);
+		if parsedMessage == 1:
+			step(g)
+		carMatrix = []
+		for c in g.cars:
+			carMatrix.append(c.location)
+		self.write_message(json.dumps(carMatrix))
 		self.close()
 
 class Application(tornado.web.Application):
@@ -84,12 +122,19 @@ class Application(tornado.web.Application):
 		(r"/r", RoadHandler),
 		(r"/s", NewRoadHandler),
 		(r"/sq", SquareInfoHandler),
+		(r"/ur", RoadUpdateHandler),
+		(r"/un", NodeUpdateHandler),
+		(r"/car", CarHandler),
 		(r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./static/"}),
 		]
 		settings = {
 			"debug": True,
 		}
 		g.load("./data/roadNetwork.db")
+		c = Car(g, 1, 0, 4, 0)
+		c.search()
+		print("path" + str(c.path))
+		g.cars.append(c)
 		tornado.web.Application.__init__(self, handlers, **settings)
 ##__End Class Definitions__##
 

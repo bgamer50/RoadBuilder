@@ -1,6 +1,6 @@
 from grid import Grid
 from road import Road, Junction
-from car import Car
+from carPrime import Car
 from func import shash
 from random import randint
 from math import sqrt
@@ -12,7 +12,7 @@ from copy import deepcopy as copy
 
 def step(g):
 	for c in g.cars:
-		if len(c.path[1]) > 0 and willMove(c.currentRoad.speed):
+		if len(c.path[1]) > 0 and willMove(c.currentRoad().speed):
 			conflict = isConflict(c, g)
 			if conflict == 0 and len(c.path[1]) > 1 and not isJunction(c.path[1][0], g):
 				c.currentLocation = c.path[1][0]
@@ -26,7 +26,7 @@ def step(g):
 				if j.type == 1:
 				    noStop = 0
 				    for d in j.dominantRoads:
-					if d.ID == c.currentRoad.ID:
+					if d.ID == c.currentRoad().ID:
 					  noStop = 1
 					  break
 				    if noStop or randint(0, 100) <= 25:
@@ -51,8 +51,8 @@ def step(g):
 		elif len(c.path[1]) <= 1:
 			g.cars.remove(c)
 	#z = clock()
-	handleZoneTrafficMorning(g)
-	#handlePureRandomTraffic(g)
+	#handleZoneTrafficMorning(g)
+	handlePureRandomTraffic(g)
 	#print("time: " + str(clock() - z))
 	visitedJunctions = []
 	for r in g.roads:
@@ -142,7 +142,7 @@ def handleZoneTrafficMorning(g):
 
 	#print(str(residentialZones) + "|||" + str(workplaceZones))
 	newCar = Car(startLoc, endLoc, startLoc, g) #HOME, DEST, CURLOC, GRID
-	newCar.path = newCar.search(newCar.currentLocation, newCar.destination, newCar.currentRoad, [], 0, 0, [])
+	newCar.path = newCar.search(newCar.currentLocation, newCar.destination, newCar.currentRoad(), [], 0, 0, [])
 	g.cars.append(newCar)
 	if newCar.path[0] < 10000000000:
 		print(newCar.path)
@@ -151,10 +151,14 @@ def handlePureRandomTraffic(g):
     #THIS IS ACTUALLY PERFECT RANDOM TRAFFIC!!!!!!
     if randint(0, 100) < 60:
 	possibleSpaces = []
-	for r in g.roads:
-	   for l in r.path:
+	for r in g.roads: #needs to be changed
+	   for l in r.path: #needs to be changed
 	     possibleSpaces.append(l)
 	if len(possibleSpaces) > 0:
-	  newCar = Car([0, 0], possibleSpaces[randint(0, len(possibleSpaces) - 1)], possibleSpaces[randint(0, len(possibleSpaces) - 1)], g)
-	  newCar.path = newCar.search(newCar.currentLocation, newCar.destination, newCar.currentRoad, [], 0, 0, [])
-	  g.cars.append(newCar)
+		startLoc = possibleSpaces[randint(0, len(possibleSpaces) - 1)]
+		endLoc = possibleSpaces[randint(0, len(possibleSpaces) - 1)]
+		print(possibleSpaces)
+		exit()
+		newCar = Car(g, startLoc[0], startLoc[1], endLoc[0], endLoc[1])
+		newCar.search()
+	  	g.cars.append(newCar)
