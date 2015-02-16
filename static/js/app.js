@@ -52,7 +52,7 @@
 		drawInfoBox(ctx);
 	    }
 	    
-	    if(new Date().getTime() - startTime > 100) {
+	    if(new Date().getTime() - startTime > 1000) {
 			window.startTime = new Date().getTime();
 			if(window.simulationRunning == 1)
 				drawCars(ctx, 1);
@@ -61,7 +61,6 @@
 	    else if(window.simulationRunning == 1) {
 	    	drawCars(ctx, 0);
 	    }
-	    
 	    window.setTimeout(draw, 300);
 
 	}
@@ -196,6 +195,7 @@
 	}
 	function drawCars(ctx, update) {
 		getCars(update);
+		console.log(window.carMatrix);
 		ctx.fillStyle = "rgb(0,200,0)";
 		length = 4;
 		dxPrime = 0;
