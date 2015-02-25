@@ -195,57 +195,20 @@
 	}
 	function drawCars(ctx, update) {
 		getCars(update);
-		console.log(window.carMatrix);
-		ctx.fillStyle = "rgb(0,200,0)";
-		length = 4;
-		dxPrime = 0;
-		dyPrime = 0;
-		var dx = 0;
-		var dy = 0;
-		for(k = 0; k < carMatrix.length; k++) {
-		    dx = carMatrix[k][1][0] - carMatrix[k][0][0];
-		    dy = carMatrix[k][1][1] - carMatrix[k][0][1];
-		    if(dx == 0 && dy == 0 && prevCarMatrix != null && k < prevCarMatrix.length) {
-				dxPrime = dx;
-				dyPrime = dy;
-				//console.log(prevCarMatrix[k].length)
-		    	dx = prevCarMatrix[k][1][0] - prevCarMatrix[k][0][0];
-				dy = prevCarMatrix[k][1][1] - prevCarMatrix[k][0][1];
-		    }
-
-		    //if(!isJunction(carMatrix[k][0])) {
-		    if(0 == 0) {
-		    	if(dx == 1 && dy == 1)
-					ctx.fillRect(squareSize * carMatrix[k][0][0], squareSize * (carMatrix[k][0][1] + 1), length, length);
-		        else if(dx == 1 && dy == -1)
-					ctx.fillRect(squareSize * (carMatrix[k][0][0] + 1), squareSize * carMatrix[k][0][1], length, length);
-				else if(dx == 1 && dy == 0)
-					ctx.fillRect(squareSize * (carMatrix[k][0][0] + 0.5), squareSize * (carMatrix[k][0][1] + 1) - length, length, length);
-				else if(dx == 0 && dy == 1)
-					ctx.fillRect(squareSize * carMatrix[k][0][0], squareSize * (carMatrix[k][0][1] + 0.5), length, length);
-				else if(dx == 0 && dy == -1)
-					ctx.fillRect(squareSize * (carMatrix[k][0][0] + 1) - length, squareSize * (carMatrix[k][0][1] + 0.5), length, length);
-				else if(dx == -1 && dy == 1)
-					ctx.fillRect(squareSize * (carMatrix[k][0][0] - 0.5), squareSize * (carMatrix[k][0][1] + 0.5), length, length);
-				else if(dx == -1 && dy == -1)
-					ctx.fillRect(squareSize * (carMatrix[k][0][0] + 1) - length, squareSize * carMatrix[k][0][1], length, length);
-				else if(dx == -1 && dy == 0)
-					ctx.fillRect(squareSize * (carMatrix[k][0][0] + 0.5), squareSize * carMatrix[k][0][1], length, length);
-		    }
-
-		    if(dxPrime == 0 && dyPrime == 0 && prevCarMatrix != null && k < prevCarMatrix.length) {
-		      try {
-		    	carMatrix[k][1][0] = prevCarMatrix[k][1][0];
-				carMatrix[k][1][1] = prevCarMatrix[k][1][1];
-				carMatrix[k][0][0] = prevCarMatrix[k][0][0];
-				carMatrix[k][0][1] = prevCarMatrix[k][0][1];
-		      }
-		      catch(err) {; /*do nothing*/}
-		    }
-		}
-		window.prevCarMatrix = [];
-		window.prevCarMatrix = $.extend(true, [], carMatrix);
-		
+		ctx.fillStyle = "rgb(0,255,0";
+		for(k = 0; k < window.carMatrix.length; k++) {
+			x = window.carMatrix[k][0];
+			y = window.carMatrix[k][1];
+			direction = window.carMatrix[k][2];
+			if(direction == 0)
+				ctx.fillRect(squareSize * (x + 0.5), squareSize * (y + 0.6), squareSize / 4, squareSize / 4);
+			else if(direction == 1)
+				ctx.fillRect(squareSize * (x + 0.5), squareSize * (y + 0.2), squareSize / 4, squareSize / 4);
+			else if(direction == 2)
+				ctx.fillRect(squareSize * (x + 0.7), squareSize * (y + 0.4), squareSize / 4, squareSize / 4);
+			else if(direction == 3)
+				ctx.fillRect(squareSize * (x + 0.2), squareSize * (y + 0.4), squareSize / 4, squareSize / 4);
+		}		
 	}
 	function drawJunctions(ctx) {
 		var x = 0;
