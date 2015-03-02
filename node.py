@@ -1,7 +1,7 @@
 class Node:
 	x = 0 #the x coordinate
 	y = 0 #the y coordinate
-	zone = 0 #the zone of the space
+	zone = 0 #the zone of the space (1 - residential, 2 - workplace 3 - commercial)
 	ID = None #the database ID of this node
 	juncType = 0 #the type of the junction if this node is a junction (1 - stop sign, 2 - traffic light, 3 - roundabout, 4 - ramp, 5 - road change, 6 - null/dead end)
 	neighbors = [] #neighboring nodes (linked by roads) [x, y, road]
@@ -33,3 +33,7 @@ class Node:
 			return 4
 		else:
 			return 0
+
+	#returns the distance between this node and node n
+	def dist(n, self):
+		return sqrt(pow(n.x - self.x, 2) + pow(n.y - self.y, 2))

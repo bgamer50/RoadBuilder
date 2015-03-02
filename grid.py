@@ -5,6 +5,7 @@ from node import Node
 class Grid:
 	nodes = []
 	roads = []
+	cars = []
 	WIDTH = 10
 	HEIGHT = 10
 
@@ -13,6 +14,7 @@ class Grid:
 		self.HEIGHT = h
 		self.nodes = []
 		self.roads = []
+		self.cars = []
 
 	def saveRoads(self, filename):
 		#initialize database
@@ -94,13 +96,14 @@ class Grid:
 		connection = sql.connect(filename)
 		cursor = connection.cursor()
 
-		rows = cursor.execute("select x, y, zone, neighbors, rowid from nodes").fetchall()
+		rows = cursor.execute("select x, y, zone, neighbors, juncType, rowid from nodes").fetchall()
 
 		for rw in rows:
 			n = Node(rw[0], rw[1])
 			n.zone = rw[2]
 			n.neighbors = self.recoverNeighbors(json.loads(rw[3]))
-			n.ID = rw[4]
+			n.juncType = rw[4]
+			n.ID = rw[5]
 			self.nodes.append(n)
 
 	def recoverNeighbors(self, arr):
@@ -150,10 +153,42 @@ class Grid:
 		x = int(array[0])
 		y = int(array[1])
 		for n in self.nodes:
-			if n.juncType != 0:
-				return -1
-			if len(n.neighbors) == 0:
-				return -2
-			elif n.x == x and n.y == y:
-				return n.neighbors[0][2].ID
-		return -1
+			if n.x == x and n.y == y:
+				if n.juncType != 0:
+					return -1
+				elif len(n.neighbors) == 0:
+					return -2
+				else:
+					return n.neighbors[0][2].ID
+		return -2
+
+	def updateRoad(self, array):
+		for r in self.roads:
+			if r.ID == int(array[0]):
+				r.name = array[1]
+				r.lanes = int(array[2])
+				r.toll = int(array[3])
+				r.speed = int(array[4])
+				r.classification = int(array[5])
+
+	def updateNode(self, array, database):
+		x = int(array[0])
+		y = int(array[1])
+		for n in self.nodes:
+			if n.x == x and n.y == y:
+				if int(array[2]) == -1:
+					self.nodes.remove(n)
+					connection = sql.connect(database)
+					connection.cursor().execute("delete from nodes where x='" + str(x) + "' and y='" + str(y) + "'")
+					connection.commit()
+					return
+				else:
+					n.zone = int(array[2])
+					n.juncType = int(array[3])
+					return
+		
+		#reaching here indicates the node needs to be created
+		n = Node(x, y)
+		n.zone = int(array[2])
+		n.juncType = int(array[3])
+		self.nodes.append(n)

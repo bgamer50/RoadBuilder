@@ -6,12 +6,13 @@ import json
 from gridPrime import Grid
 from road import Road
 from carPrime import Car
-from simulation import step
+from simulation import Simulation
 ##__End Imports__##
 
 ##__Begin Variable Definitions__##
 clients = dict()
 g = Grid(94, 46)
+simulation = Simulation(g)
 database = "./data/roadNetwork.db"
 ##__End Variable Definitions__##
 
@@ -105,14 +106,13 @@ class CarHandler(tornado.websocket.WebSocketHandler):
 		clients[self.id] = {"id": self.id, "object": self}
 
 	def on_message(self, message):
-		parsedMessage = int(message);
+		parsedMessage = int(message)
 		if parsedMessage == 1:
-			step(g)
+			simulation.step()
 		carMatrix = []
 		for c in g.cars:
-			carMatrix.append(c.location)
+			carMatrix.append([c.location[0], c.location[1], c.direction()])
 		self.write_message(json.dumps(carMatrix))
-		self.close()
 
 class Application(tornado.web.Application):
 	def __init__(self):

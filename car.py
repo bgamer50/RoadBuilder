@@ -7,6 +7,7 @@ class Car:
 	path = [] #the locations this car intends to travel to, in order.
 	myGrid = None #the grid that contains ths car.
 	MAX_RECUSION_DEPTH = 100 #the maximum depth of recursion for the search algorithm
+	previousDirection = 0 #last direction the car was moving in
 
 	def __init__(self, g, x, y, destX, destY): #grid, current location, destination
 		self.points = 180
@@ -71,8 +72,27 @@ class Car:
 			else:
 				return None
 
-	def currentLocation(self):
-		if len(self.path) > 0:
-			return self.path[0]
+	def direction(self):
+		#0 - moving left to right; 1 - moving right to left; 2 - moving bottom to top; 3 = moving top to bottom
+		try:
+			dx = self.path[1][0] - self.location[0]
+			dy = self.path[1][0] - self.location[1]
+		except:
+			return self.previousDirection
+		if dx > 0 and dy == 0:
+			self.previousDirection = 0
+			return 0
+		elif dx < 0 and dy == 0:
+			self.previousDirection = 1
+			return 1
+		elif dy > 0 and dx == 0:
+			self.previousDirection = 2
+			return 2
+		elif dy < 0 and dx == 0:
+			self.previousDirection = 3
+			return 3
 		else:
-			return None
+			if dx > 0:
+				return 0
+			if dx < 0:
+				return 1
