@@ -1,6 +1,3 @@
-from func import shash
-from copy import deepcopy as copy
-
 #This is the Road class, responsible for holding all road information.  Ultimately, the most important info is its path and junctions.
 class Road:
     path = [] #List of each place on the grid it passes through. WILL BE REMOVED

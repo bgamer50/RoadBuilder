@@ -3,9 +3,9 @@ import tornado.ioloop, tornado.web, tornado.websocket
 from tornado.options import define, options, parse_command_line
 import sqlite3 as sql
 import json
-from gridPrime import Grid
+from grid import Grid
 from road import Road
-from carPrime import Car
+from car import Car
 from simulation import Simulation
 ##__End Imports__##
 

@@ -192,3 +192,10 @@ class Grid:
 		n.zone = int(array[2])
 		n.juncType = int(array[3])
 		self.nodes.append(n)
+
+	def getNeighbors(self, loc):
+	 	for n in self.nodes:
+	 		if n.x == loc[0] and n.y == loc[1]:
+	 			return n.neighbors
+	 	print("Error: No neighbors for loc " + str(loc))
+	 	return []

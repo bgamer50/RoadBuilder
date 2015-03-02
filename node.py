@@ -1,3 +1,4 @@
+from math import sqrt
 class Node:
 	x = 0 #the x coordinate
 	y = 0 #the y coordinate
