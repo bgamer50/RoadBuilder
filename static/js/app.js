@@ -1,8 +1,6 @@
 	var pointMatrix = []; //road point matrix
 	var carMatrix = [];
-	var juncMatrix = [];
 	var newRoadPath = [];
-	var zoneMatrix = [];
 	var newZones = [];
 	var roads = [];
 	var nodes = [];
@@ -16,7 +14,6 @@
 	var simulationRunning = 1;
 	var roadsDrawn = 0;
 	var nodesDrawn = 0;
-	var junctionsDrawn = 0;
 	var zonesDrawn = 0;
 	var selectedRoadID = 1;
 	var infoBoxX = 0;
@@ -25,7 +22,6 @@
 	var roadButtonText = "Create Road";
 	var editing = 0;
 	var definingZone = 0;
-	var timeasdf = 0;
 	
 	function pause(t) { sTime = new Date().getTime(); while(new Date().getTime() - sTime < t); } 
 	
@@ -163,13 +159,6 @@
 	    }
 	}
 
-	function isJunction(loc) {
-		for(k = 0; k < juncMatrix.length; k++) {
-			if(juncMatrix[k][0] == loc[0] && window.nodes[k][4] == loc[1])
-				return 1;
-		return 0;
-		}
-	}
 	function drawZones(ctx) {
 	  try {
 	    for(k = 0; k < newZones.length; k++) {
