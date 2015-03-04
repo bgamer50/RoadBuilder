@@ -48,7 +48,7 @@
 		drawInfoBox(ctx);
 	    }
 	    
-	    if(new Date().getTime() - startTime > 1000) {
+	    if(new Date().getTime() - startTime > 500) {
 			window.startTime = new Date().getTime();
 			if(window.simulationRunning == 1)
 				drawCars(ctx, 1);
