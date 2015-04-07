@@ -174,6 +174,7 @@ class Grid:
 	def updateNode(self, array, database):
 		x = int(array[0])
 		y = int(array[1])
+		print(array)
 		for n in self.nodes:
 			if n.x == x and n.y == y:
 				if int(array[2]) == -1:

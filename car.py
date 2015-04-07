@@ -1,8 +1,7 @@
-from gridPrime import Grid
-from func import getNeighbors
+from grid import Grid
 class Car:
 	points = 180 #the number of points this car has.  Moves when this gets to 0.  i.e. speed limit 20 -> 6 ticks
-	location = [] #the current location of this car (corresponds to an x and y)
+	location = [] #the current location of this car (corresponds to a node)
 	destination = [] #the car's intended destination
 	path = [] #the locations this car intends to travel to, in order.
 	myGrid = None #the grid that contains ths car.
@@ -11,32 +10,36 @@ class Car:
 
 	def __init__(self, g, x, y, destX, destY): #grid, current location, destination
 		self.points = 180
-		self.location = [x, y]
 		self.path = []
 		self.destination = [destX, destY]
 		self.myGrid = g
+		self.location = self.myGrid.getNode(x, y)
 
 	def search(self):
-		self.path = self.searchRecursive([[self.location], 0], self.location)[0]
+		p = self.searchRecursive([0, [self.myGrid.getNode(self.location.x, self.location.y)]], self.destination)
+		p = p[1]
+		if p == None:
+			self.path = []
+		else:
+			self.path = p
 
 	def getQualityIndex(self, r):
 		#a weight that favors roads with high speeds and many lanes.
-		#print(str(r.numLanes) + " " + str(r.speed))
 		return pow(r.numLanes * r.speed, -1)
 
 	def minP(self, pArray):
 		#returns the best path
 		if len(pArray) == 0:
-			return [None, 99999999999]
+			return [99999999999, [None]]
 		bestP = pArray[0]
 		for p in pArray:
-			if p[1] < bestP[1]:
+			if p[1] < bestP[1] and len(p[0]) >= 1:
 				bestP = p
 		return bestP
 
-	def containsLocation(self, p, x, y):
+	def containsLocation(self, p, nd):
 		for n in p:
-			if n[0] == x and n[1] == y:
+			if n.x == nd.x and n.y == nd.y:
 				return 1
 		return 0
 
@@ -45,23 +48,26 @@ class Car:
 			return 1
 		return 0
 
-	def searchRecursive(self, p, loc):
+	def searchRecursive(self, p, destination):
 		#base case, when it has reached max recursion depth
-		if len(p[0]) >= 100:
-			return [None, 9999999999]
+		if len(p[1]) >= 100:
+			return [9999999999, [None]]
 
 		#second base case, when it has found the destination
-		if self.sameLocation(loc, self.destination):
-			weight = p.pop()
-			return p + [self.destination, weight]
+		nd = p[1][len(p[1]) - 1]
+		if self.sameLocation([nd.x, nd.y], self.destination):
+			return p
 
 		#recurs to each neighbor
-		nbrs = getNeighbors(loc, self.myGrid)
+		#nbrs = self.myGrid.getNeighbors(nd)
 		newPArray = []
-		for n in nbrs:
-			if not self.containsLocation(p[0], n[0], n[1]):
-				tempP = [p[0] + [[n[0], n[1]]], p[1] + self.getQualityIndex(n[2])] #first array element is the path, second is the weight
-				newPArray.append(self.searchRecursive(tempP, [n[0], n[1]]))
+		for nbr in nd.neighbors:
+			nodeNbr = self.myGrid.getNode(nbr[0], nbr[1])
+			if not self.containsLocation(p[1], nodeNbr):
+				tempP = []
+				tempP.append(p[0] + self.getQualityIndex(nbr[2]))
+				tempP.append(p[1] + [nodeNbr])
+				newPArray.append(self.searchRecursive(tempP, destination))
 		#returns minimum
 		return self.minP(newPArray)
 

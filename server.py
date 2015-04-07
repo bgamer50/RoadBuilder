@@ -60,6 +60,7 @@ class NewRoadHandler(tornado.websocket.WebSocketHandler):
 		parsedMessage = json.loads(message)
 		r = Road(parsedMessage[0], [[]])
 		g.roads.append(r)
+		g.saveRoads(database)
 		g.arrayToNodes(parsedMessage[1], r)
 		g.save(database)
 		self.close()
@@ -111,8 +112,9 @@ class CarHandler(tornado.websocket.WebSocketHandler):
 			simulation.step()
 		carMatrix = []
 		for c in g.cars:
-			carMatrix.append([c.location[0], c.location[1], c.direction()])
+			carMatrix.append([c.location.x, c.location.y, c.direction()])
 		self.write_message(json.dumps(carMatrix))
+		self.close()
 
 class Application(tornado.web.Application):
 	def __init__(self):
@@ -133,7 +135,7 @@ class Application(tornado.web.Application):
 		g.load("./data/roadNetwork.db")
 		c = Car(g, 1, 0, 4, 0)
 		c.search()
-		print("path" + str(c.path))
+		print(c.path)
 		g.cars.append(c)
 		tornado.web.Application.__init__(self, handlers, **settings)
 ##__End Class Definitions__##

@@ -14,7 +14,6 @@ class Simulation:
 	def step(self):
 		for c in self.grid.cars:
 			if len(c.path) > 1:
-				print(c.path)
 				c.path = c.path[1:] #move the car up one place
 				c.location = c.path[0]
 			else:
@@ -30,7 +29,7 @@ class Simulation:
 				if z < minDistance:
 					minDistance = z
 					nearestRoad = k
-			return nearestRoad
+		return nearestRoad
 
 	def generateDestination(self, x, y):
 		possibleDestinations = []
@@ -48,6 +47,9 @@ class Simulation:
 			if n.zone == 1:
 				r = self.calculateNearestRoad(n)
 				dR = self.generateDestination(r.x, r.y)
-				if randint(0, 9) >= 1:
-					c = Car(self.grid, r.x, r.y, dR.x, dR.y)
-					c.search()
+				if r != None and dR != None:
+					if randint(0, 9) >= 9:
+						c = Car(self.grid, r.x, r.y, dR.x, dR.y)
+						c.search()
+						print("location: " + str(c.location.x) + "," + str(c.location.y) + " destination: " + str(c.destination) + " path: " + str(c.path))
+						self.grid.cars.append(c)
